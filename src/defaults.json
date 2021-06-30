@@ -1,0 +1,102 @@
+{
+  "environments": [{
+      "handle": "audio",
+      "name": "Audio",
+      "dir": "<base>\\Audio"
+    },
+    {
+      "handle": "cpp",
+      "name": "C++",
+      "dir": "<base>\\code\\cpp"
+    },
+    {
+      "handle": "csharp",
+      "name": "C#",
+      "dir": "<base>\\code\\csharp"
+    },
+    {
+      "handle": "delphi7",
+      "name": "Delphi 7",
+      "dir": "<base>\\code\\delphi\\7"
+    },
+    {
+      "handle": "delphi10",
+      "name": "Delphi 10",
+      "dir": "<base>\\code\\delphi\\10"
+    },
+    {
+      "handle": "Docker",
+      "name": "docker",
+      "dir": "<base>\\code\\docker"
+    },
+    {
+      "handle": "Java",
+      "name": "java",
+      "dir": "<base>\\code\\java"
+    },
+    {
+      "handle": "JavaScript",
+      "name": "js",
+      "dir": "<base>\\code\\web",
+      "ignore": [
+        "bower_components",
+        "node_modules"
+      ]
+    },
+    {
+      "handle": "Markdown",
+      "name": "md",
+      "dir": "<base>\\code\\md"
+    },
+    {
+      "handle": "Photoshop",
+      "name": "ps",
+      "dir": "<base>\\Bild"
+    },
+    {
+      "handle": "PHP",
+      "name": "php",
+      "dir": "<base>\\code\\web",
+      "ignore": [
+        "bower_components",
+        "node_modules",
+        "vendor"
+      ]
+    },
+    {
+      "handle": "Picture",
+      "name": "picture",
+      "dir": "<base>\\Bild"
+    },
+    {
+      "handle": "Premiere",
+      "name": "premiere",
+      "dir": "<base>\\Video"
+    },
+    {
+      "handle": "Python",
+      "name": "python",
+      "dir": "<base>\\code\\python"
+    },
+    {
+      "handle": "Terraform",
+      "name": "tf",
+      "dir": "<base>\\code\\terraform"
+    },
+    {
+      "handle": "UML",
+      "name": "uml",
+      "dir": "<base>\\uml"
+    },
+    {
+      "handle": "Vegas",
+      "name": "vegas",
+      "dir": "<base>\\Video"
+    },
+    {
+      "handle": "Windows Movie Maker",
+      "name": "wmm",
+      "dir": "<base>\\Video"
+    }
+  ]
+}

@@ -38,23 +38,45 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+      <v-container>
+        <v-row>
+          <v-col>
+            <h2 class="mb-5">Hot</h2>
+            <werk-table :items="hotWerke"/>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <h2 class="mb-5">Cold</h2>
+            <werk-table :items="coldWerke"/>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <h2 class="mb-5">Archived</h2>
+            <werk-table :items="archivedWerke"/>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import { mapGetters } from 'vuex';
+import WerkTable from './components/WerkTable.vue';
 
 export default {
   name: 'App',
-
   components: {
-    HelloWorld,
+    WerkTable,
   },
-
-  data: () => ({
-    //
-  }),
+  computed: {
+    ...mapGetters([
+      'hotWerke',
+      'coldWerke',
+      'archivedWerke',
+    ]),
+  },
 };
 </script>

@@ -15,10 +15,14 @@
   "main": "background.js",
   "dependencies": {
     "@mdi/font": "5.9.55",
+    "electron": "^13.1.4",
+    "electron-devtools-installer": "^3.2.0",
+    "fs-extra": "^10.0.0",
     "roboto-fontface": "*",
     "vue": "^2.6.11",
     "vuetify": "^2.4.0",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "vuex-electron-store": "^1.4.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-eslint": "~4.5.0",
