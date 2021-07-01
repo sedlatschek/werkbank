@@ -12,10 +12,10 @@ Vue.config.productionTip = false;
 
 (async () => {
   await ensureDir(DIR_APPDATA);
-  await store.dispatch(BOOTSTRAP);
   window.app = new Vue({
     store,
     vuetify,
     render(h) { return h(App); },
   }).$mount('#app');
+  store.dispatch(BOOTSTRAP);
 })();

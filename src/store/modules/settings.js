@@ -5,9 +5,9 @@ export default {
   state: {
     settings: {
       directories: {
-        hot: 'hot',
-        cold: 'cold',
-        archive: 'archive',
+        hot: 'tmp/hot',
+        cold: 'tmp/cold',
+        archive: 'tmp/archive',
       },
       gatherOnStartup: true,
     },

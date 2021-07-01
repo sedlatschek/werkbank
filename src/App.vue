@@ -2,59 +2,51 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
+      color="dark"
+      dark>
+      <h1 class="font-weight-light">Werkbank</h1>
       <v-spacer></v-spacer>
-
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+        title="Create Werk"
+        class="ml-5"
+        fab
+        small
+        dark
+        color="teal lighten-1"
+        @click="createWerk">
+        <v-icon dark>
+          mdi-plus
+        </v-icon>
       </v-btn>
     </v-app-bar>
 
     <v-main>
-      <v-container>
+      <v-container class="pt-12">
+        <werk-edit
+          v-model="showWerkEdit"
+          :werk="werkToEdit"/>
         <v-row>
           <v-col>
             <h2 class="mb-5">Hot</h2>
-            <werk-table :items="hotWerke"/>
+            <werk-table
+              :items="hotWerke"
+              @edit="editWerk"/>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
             <h2 class="mb-5">Cold</h2>
-            <werk-table :items="coldWerke"/>
+            <werk-table
+              :items="coldWerke"
+              @edit="editWerk"/>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
             <h2 class="mb-5">Archived</h2>
-            <werk-table :items="archivedWerke"/>
+            <werk-table
+              :items="archivedWerke"
+              @edit="editWerk"/>
           </v-col>
         </v-row>
       </v-container>
@@ -63,12 +55,15 @@
 </template>
 
 <script>
+import { v4 as uuid } from 'uuid';
 import { mapGetters } from 'vuex';
+import WerkEdit from './components/WerkEdit.vue';
 import WerkTable from './components/WerkTable.vue';
 
 export default {
   name: 'App',
   components: {
+    WerkEdit,
     WerkTable,
   },
   computed: {
@@ -77,6 +72,33 @@ export default {
       'coldWerke',
       'archivedWerke',
     ]),
+  },
+  data() {
+    return {
+      showWerkEdit: false,
+      werkToEdit: null,
+    };
+  },
+  methods: {
+    createWerk() {
+      this.werkToEdit = {
+        id: uuid(),
+        title: '',
+        name: '',
+        desc: '',
+        created: new Date(),
+        env: null,
+        compressOnArchive: true,
+        state: 0,
+        moving: false,
+        history: [],
+      };
+      this.showWerkEdit = true;
+    },
+    editWerk(werk) {
+      this.werkToEdit = werk;
+      this.showWerkEdit = true;
+    },
   },
 };
 </script>

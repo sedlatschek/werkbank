@@ -1,6 +1,7 @@
 import {
   existsSync,
   lstatSync,
+  outputJson,
   readdirSync,
   readFileSync,
 } from 'fs-extra';
@@ -14,6 +15,7 @@ import {
   WERK_STATE_COLD,
   ADD_WERK,
   SET_WERK,
+  SAVE_WERK,
   GATHER_WERKE,
   SET_GATHERING_WERKE_PROGRESS,
   SET_GATHERING_WERKE,
@@ -42,6 +44,12 @@ export default {
     archivedWerke(state) {
       return state.werke.filter((werk) => werk.state === WERK_STATE_ARCHIVED);
     },
+    gatheringWerke(state) {
+      return state.gatheringWerke;
+    },
+    gatheringWerkeProgress(state) {
+      return state.gatheringWerkeProgress;
+    },
   },
   mutations: {
     [ADD_WERK](state, werk) {
@@ -68,11 +76,11 @@ export default {
       }
       return false;
     },
-    [GATHER_WERKE]({ dispatch, getters }, dir) {
+    [GATHER_WERKE]({ commit, dispatch, getters }, dir) {
       return new Promise((resolve, reject) => {
         try {
-          dispatch(SET_GATHERING_WERKE, true);
-          dispatch(SET_GATHERING_WERKE_PROGRESS, {
+          commit(SET_GATHERING_WERKE, true);
+          commit(SET_GATHERING_WERKE_PROGRESS, {
             cur: 0,
             total: 1,
             item: 'Gathering directories...',
@@ -99,7 +107,7 @@ export default {
           for (let i = 0; i < werkDirs.length; i += 1) {
             const werkDir = werkDirs[i];
 
-            dispatch(SET_GATHERING_WERKE_PROGRESS, {
+            commit(SET_GATHERING_WERKE_PROGRESS, {
               cur: i + 1,
               total: werkDirs.length,
               item: `Searching in ${werkDir}`,
@@ -111,25 +119,30 @@ export default {
               continue;
             }
             const werk = JSON.parse(readFileSync(werkFile, { encoding: 'utf8' }));
-            result.push(dispatch(ADD_WERK, werk));
+            werk.created = new Date(werk.created);
+            result.push(dispatch(SET_WERK, werk));
           }
 
           resolve(Promise.all(result));
         } catch (ex) {
-          dispatch(SET_GATHERING_WERKE, false);
+          commit(SET_GATHERING_WERKE, false);
           reject(ex);
         } finally {
-          dispatch(SET_GATHERING_WERKE, false);
+          commit(SET_GATHERING_WERKE, false);
         }
       });
     },
-    [ADD_WERK]({ commit, getters }, werk) {
+    [SET_WERK]({ commit, getters }, werk) {
       const index = getters.werke.findIndex((w) => w.id === werk.id);
       if (index === -1) {
         commit(ADD_WERK, werk);
       } else {
         commit(SET_WERK, { index, werk });
       }
+    },
+    [SAVE_WERK]({ getters }, werk) {
+      const file = join(getters.setting_dir_hot, werk.name, WERK_DIR_NAME, WERK_FILE_NAME);
+      return outputJson(file, werk);
     },
   },
 };
