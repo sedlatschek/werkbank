@@ -23,4 +23,35 @@ export const WERK_STATE = {
 };
 export const ADD_WERK = 'ADD_WERK';
 export const SET_WERK = 'SET_WERK';
+export const RELOAD_WERK = 'RELOAD_WERK';
 export const SAVE_WERK = 'SAVE_WERK';
+
+// operations
+export const OP_COPY_FILE = 'OP_COPY_FILE';
+export const OP_MOVE_FILE = 'OP_MOVE_FILE';
+export const OP_WRITE_FILE = 'OP_WRITE_FILE';
+export const OP_CREATE_DIR = 'OP_CREATE_DIR';
+export const OP_DELETE = 'OP_DELETE';
+export const OP_COPY_DIR = 'OP_COPY_DIR';
+export const OP_MOVE = 'OP_MOVE';
+export const OP_HIDE_DIR = 'OP_HIDE_DIR';
+export const OP_ZIP_DIR = 'OP_ZIP_DIR';
+export const OP_UNZIP = 'OP_UNZIP';
+export const OP_RELOAD_WERK = 'OP_RELOAD_WERK';
+export const SET_OPERATION = 'SET_OPERATION';
+
+// moves
+export const MOVE_FREEZE = 'MOVE_FREEZE';
+export const MOVE_BACKUP = 'MOVE_BACKUP';
+export const MOVE_HEATUP = 'MOVE_HEATUP';
+export const MOVE_ARCHIVE = 'MOVE_ARCHIVE';
+export const MOVE_RETRIEVE = 'MOVE_RETRIEVE';
+
+// queue
+export const BOOTSTRAP_QUEUE = 'BOOTSTRAP_QUEUE';
+export const WORK_QUEUE = 'WORK_QUEUE';
+export const RUN_BATCH = 'RUN_BATCH';
+export const SET_BATCH = 'SET_BATCH';
+export const SET_BATCH_PROP = 'SET_BATCH_PROP';
+export const REMOVE_BATCH = 'REMOVE_BATCH';
+export const SET_QUEUE_INTERVAL = 'SET_QUEUE_INTERVAL';

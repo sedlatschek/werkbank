@@ -1,5 +1,6 @@
 import { homedir, platform } from 'os';
 import { join } from 'path';
+import winattr from 'winattr';
 
 export function getAppDataPath() {
   const curPlatform = platform();
@@ -13,4 +14,22 @@ export function getAppDataPath() {
   }
   // linux
   return join(homedir(), '.config');
+}
+
+export function pad(number) {
+  if (number < 10) return `0${number}`;
+  return number;
+}
+
+export function hideDir(dir) {
+  return new Promise((resolve, reject) => {
+    if (!platform().startsWith('win')) resolve();
+    winattr.set(dir, { hidden: true }, (error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
 }

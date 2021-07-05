@@ -1,4 +1,5 @@
 import {
+  ensureDir,
   existsSync,
   lstatSync,
   outputJson,
@@ -19,7 +20,19 @@ import {
   GATHER_WERKE,
   SET_GATHERING_WERKE_PROGRESS,
   SET_GATHERING_WERKE,
+  RELOAD_WERK,
+  WERK_STATE,
 } from '../types';
+import { hideDir } from '../../util';
+
+function deserialize(werkFile) {
+  const werk = JSON.parse(readFileSync(werkFile, { encoding: 'utf8' }));
+  werk.created = new Date(werk.created);
+  for (let i = 0; i < werk.history.length; i += 1) {
+    werk.history[i].ts = new Date(werk.history[i].ts);
+  }
+  return werk;
+}
 
 export default {
   state: {
@@ -35,6 +48,7 @@ export default {
     werke(state) {
       return state.werke;
     },
+    werkById: (state) => (id) => state.werke.find((werk) => werk.id === id),
     hotWerke(state) {
       return state.werke.filter((werk) => werk.state === WERK_STATE_HOT);
     },
@@ -49,6 +63,12 @@ export default {
     },
     gatheringWerkeProgress(state) {
       return state.gatheringWerkeProgress;
+    },
+    dirFor: (state, getters) => (werk, werkState = null) => {
+      const desiredState = (werkState == null) ? werk.state : werkState;
+      const env = getters.environmentByHandle(werk.env);
+      const baseDir = getters.setting_dir(desiredState);
+      return join(env.dir.replace(/<base>/, baseDir), werk.name);
     },
   },
   mutations: {
@@ -77,6 +97,7 @@ export default {
       return false;
     },
     [GATHER_WERKE]({ commit, dispatch, getters }, dir) {
+      console.log(`Gather werke in ${dir}`);
       return new Promise((resolve, reject) => {
         try {
           commit(SET_GATHERING_WERKE, true);
@@ -118,8 +139,7 @@ export default {
             if (!existsSync(werkFile)) {
               continue;
             }
-            const werk = JSON.parse(readFileSync(werkFile, { encoding: 'utf8' }));
-            werk.created = new Date(werk.created);
+            const werk = deserialize(werkFile);
             result.push(dispatch(SET_WERK, werk));
           }
 
@@ -140,9 +160,28 @@ export default {
         commit(SET_WERK, { index, werk });
       }
     },
-    [SAVE_WERK]({ getters }, werk) {
-      const file = join(getters.setting_dir_hot, werk.name, WERK_DIR_NAME, WERK_FILE_NAME);
-      return outputJson(file, werk);
+    [RELOAD_WERK]({ dispatch, getters }, id) {
+      const werk = getters.werkById(id);
+      if (werk) {
+        Object.keys(WERK_STATE).forEach((werkState) => {
+          const dir = getters.dirFor(werk, werkState);
+          const werkFile = join(dir, WERK_DIR_NAME, WERK_FILE_NAME);
+          if (existsSync(werkFile)) {
+            const reloadedWerk = deserialize(werkFile);
+            return dispatch(SET_WERK, reloadedWerk);
+          }
+          return false;
+        });
+      }
+      return false;
+    },
+    async [SAVE_WERK]({ getters }, werk) {
+      const dir = getters.dirFor(werk);
+      const werkDir = join(dir, WERK_DIR_NAME);
+      await ensureDir(werkDir);
+      await hideDir(werkDir);
+      const werkFile = join(werkDir, WERK_FILE_NAME);
+      return outputJson(werkFile, werk);
     },
   },
 };

@@ -31,6 +31,7 @@
 
         <v-container class="mt-10">
           <v-form
+            v-if="werk && tmp"
             ref="form"
             v-model="valid">
             <v-row>
@@ -79,7 +80,7 @@
                     :key="`history-${index}`">
                     <v-list-item-content>
                       <v-list-item-title>{{ WERK_STATE[entry.state] }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ entry.ts }}</v-list-item-subtitle>
+                      <v-list-item-subtitle>{{ entry.ts | prettyDate }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
                 </v-card>
@@ -94,10 +95,12 @@
 
 <script>
 import { SET_WERK, SAVE_WERK, WERK_STATE } from '@/store/types';
+import dateUtil from '@/mixins/dateUtil';
 import DateField from './DateField.vue';
 import EnvironmentSelect from './EnvironmentSelect.vue';
 
 export default {
+  mixins: [dateUtil],
   components: {
     DateField,
     EnvironmentSelect,

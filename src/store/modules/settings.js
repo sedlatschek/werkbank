@@ -25,6 +25,7 @@ export default {
     setting_dir_archive(state) {
       return state.settings.directories.archive;
     },
+    setting_dir: (state) => (werkState) => Object.values(state.settings.directories)[werkState],
   },
   mutations: {
     [SET_SETTING](state, { key, value }) {

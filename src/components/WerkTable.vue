@@ -7,26 +7,65 @@
       <v-icon
         title="Edit Werk"
         small
-        class="mr-2"
+        class="ml-2"
         @click.stop="$emit('edit', item)">
         mdi-pencil
       </v-icon>
       <v-icon
         title="Delete Werk"
         small
+        class="ml-2"
         @click.stop="$emit('delete', item)">
         mdi-delete
+      </v-icon>
+      <v-icon
+        v-if="enableBackup"
+        title="Backup Werk"
+        small
+        class="ml-2"
+        @click.stop="backup(item)">
+        mdi-content-save
+      </v-icon>
+      <v-icon
+        v-if="upAction"
+        title="Heatup Werk"
+        small
+        class="ml-2"
+        @click.stop="up(item)">
+        mdi-arrow-up-bold
+      </v-icon>
+      <v-icon
+        v-if="downAction"
+        title="Freeze Werk"
+        small
+        class="ml-2"
+        @click.stop="down(item)">
+        mdi-arrow-down-bold
       </v-icon>
     </template>
   </v-data-table>
 </template>
 
 <script>
+import { MOVE_BACKUP } from '@/store/types';
+
 export default {
   props: {
     items: {
       type: Array,
       required: true,
+    },
+    downAction: {
+      type: String,
+      default: null,
+    },
+    upAction: {
+      type: String,
+      default: null,
+    },
+    enableBackup: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -47,8 +86,20 @@ export default {
         text: 'Actions',
         value: 'actions',
         sortable: false,
+        align: 'right',
       }],
     };
+  },
+  methods: {
+    down(werk) {
+      this.$store.dispatch(this.downAction, werk);
+    },
+    up(werk) {
+      this.$store.dispatch(this.upAction, werk);
+    },
+    backup(werk) {
+      this.$store.dispatch(MOVE_BACKUP, werk);
+    },
   },
 };
 </script>

@@ -9,6 +9,9 @@ export default {
     environments(state) {
       return state.environments;
     },
+    environmentByHandle: (state) => function (handle) {
+      return state.environments.find((env) => env.handle === handle);
+    },
   },
   mutations: {
     [ADD_ENVIRONMENTS](state, environments) {

@@ -2,37 +2,44 @@
   "environments": [{
       "handle": "audio",
       "name": "Audio",
-      "dir": "<base>\\Audio"
+      "dir": "<base>\\Audio",
+      "ignore": []
     },
     {
       "handle": "cpp",
       "name": "C++",
-      "dir": "<base>\\code\\cpp"
+      "dir": "<base>\\code\\cpp",
+      "ignore": []
     },
     {
       "handle": "csharp",
       "name": "C#",
-      "dir": "<base>\\code\\csharp"
+      "dir": "<base>\\code\\csharp",
+      "ignore": []
     },
     {
       "handle": "delphi7",
       "name": "Delphi 7",
-      "dir": "<base>\\code\\delphi\\7"
+      "dir": "<base>\\code\\delphi\\7",
+      "ignore": []
     },
     {
       "handle": "delphi10",
       "name": "Delphi 10",
-      "dir": "<base>\\code\\delphi\\10"
+      "dir": "<base>\\code\\delphi\\10",
+      "ignore": []
     },
     {
       "handle": "docker",
       "name": "Docker",
-      "dir": "<base>\\code\\docker"
+      "dir": "<base>\\code\\docker",
+      "ignore": []
     },
     {
       "handle": "Java",
       "name": "java",
-      "dir": "<base>\\code\\java"
+      "dir": "<base>\\code\\java",
+      "ignore": []
     },
     {
       "handle": "js",
@@ -46,12 +53,14 @@
     {
       "handle": "md",
       "name": "Markdown",
-      "dir": "<base>\\code\\md"
+      "dir": "<base>\\code\\md",
+      "ignore": []
     },
     {
       "handle": "ps",
       "name": "Photoshop",
-      "dir": "<base>\\Bild"
+      "dir": "<base>\\Bild",
+      "ignore": []
     },
     {
       "handle": "php",
@@ -66,37 +75,44 @@
     {
       "handle": "picture",
       "name": "Picture",
-      "dir": "<base>\\Bild"
+      "dir": "<base>\\Bild",
+      "ignore": []
     },
     {
       "handle": "premiere",
       "name": "Premiere",
-      "dir": "<base>\\Video"
+      "dir": "<base>\\Video",
+      "ignore": []
     },
     {
       "handle": "python",
       "name": "Python",
-      "dir": "<base>\\code\\python"
+      "dir": "<base>\\code\\python",
+      "ignore": []
     },
     {
       "handle": "tf",
       "name": "Terraform",
-      "dir": "<base>\\code\\terraform"
+      "dir": "<base>\\code\\terraform",
+      "ignore": []
     },
     {
       "handle": "uml",
       "name": "UML",
-      "dir": "<base>\\uml"
+      "dir": "<base>\\uml",
+      "ignore": []
     },
     {
       "handle": "vegas",
       "name": "Vegas",
-      "dir": "<base>\\Video"
+      "dir": "<base>\\Video",
+      "ignore": []
     },
     {
       "handle": "wmm",
       "name": "Windows Movie Maker",
-      "dir": "<base>\\Video"
+      "dir": "<base>\\Video",
+      "ignore": []
     }
   ]
 }
