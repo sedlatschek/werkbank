@@ -2,14 +2,22 @@ name: Build/release
 on: push
 jobs:
   release:
-    runs-on: electronuserland/builder:wine
-    # runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
-    # strategy:
-    #   matrix:
-    #     os: [macos-latest, ubuntu-latest, windows-latest]
+    strategy:
+      matrix:
+      #  os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
 
     steps:
+      - name: Install wine
+        run:
+          sudo dpkg --add-architecture i386
+          wget -qO - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
+          sudo add-apt-repository ppa:cybermax-dexter/sdl2-backport
+          sudo apt-add-repository "deb https://dl.winehq.org/wine-builds/ubuntu $(lsb_release -cs) main"
+          sudo apt install --install-recommends winehq-stable
+
       - name: Check out Git repository
         uses: actions/checkout@v1
 
