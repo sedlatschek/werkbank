@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { ensureDir } from 'fs-extra';
+import { autoUpdater } from 'electron-updater';
 import { DIR_APPDATA } from '@/config';
 import { BOOTSTRAP } from '@/store/types';
 import App from './App.vue';
@@ -18,4 +19,5 @@ Vue.config.productionTip = false;
     render(h) { return h(App); },
   }).$mount('#app');
   store.dispatch(BOOTSTRAP);
+  autoUpdater.checkForUpdatesAndNotify();
 })();

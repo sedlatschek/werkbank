@@ -1,4 +1,3 @@
-# werkbank
 # Werkbank
 
 ![Logo](public/android-chrome-192x192.png)
