@@ -11,4 +11,5 @@ export const GIT_DIR_NAME = '.git';
 export const GIT_ZIP_FILE_NAME = 'git.zip';
 
 export const OP_ATTEMPT_LIMIT = 10;
+export const OP_RETRY_TIMEOUT = 30000;
 export const QUEUE_INTERVAL = 1000;

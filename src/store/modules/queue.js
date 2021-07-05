@@ -17,6 +17,7 @@ import {
   GIT_DIR_NAME,
   GIT_ZIP_FILE_NAME,
   OP_ATTEMPT_LIMIT,
+  OP_RETRY_TIMEOUT,
   QUEUE_INTERVAL,
   WERK_DIR_NAME,
   WERK_FILE_NAME,
@@ -479,37 +480,55 @@ export default {
     },
     [WORK_QUEUE]({ commit, dispatch, getters }) {
       if (getters.queue.length > 0) {
-        const batch = getters.queue[0];
-        if (batch.done()) {
-          commit(REMOVE_BATCH, batch.id);
-        } else {
+        // remove finished batches
+        const finishedBatches = getters.queue.filter(
+          (b) => b.operations.filter((op) => !op.done).length === 0,
+        );
+        finishedBatches.forEach((b) => commit(REMOVE_BATCH, b.id));
+        // find batch with a pending operation
+        const batch = getters.queue.find((b) => {
+          // get first operation that is not done yet
+          const op = b.operations.find((o) => !o.done);
+          // check whether it is on timeout/limit
+          return op.attempt <= OP_ATTEMPT_LIMIT
+            && (!op.lastAttempt
+              || (new Date()).getTime() - op.lastAttempt.getTime() >= OP_RETRY_TIMEOUT);
+        });
+        if (batch) {
           return dispatch(RUN_BATCH, batch);
         }
       }
       return false;
     },
     async [RUN_BATCH]({ commit }, batch) {
+      // get first operation that is not done yet
       const op = batch.operations.find((o) => !o.done);
-      if (op.attempt >= OP_ATTEMPT_LIMIT) return;
-      const setBatchProp = (key, value) => commit(SET_BATCH_PROP, { id: batch.id, key, value });
-      if (op) {
-        setBatchProp('running', true);
-        try {
-          op.running = true;
-          op.attempt += 1;
-          op.lastAttempt = new Date();
-          commit(SET_OPERATION, op);
-          await run(op);
-          op.done = true;
-        } catch (error) {
-          op.done = false;
-          op.error = error;
-        } finally {
-          op.running = false;
-          commit(SET_OPERATION, op);
-          setBatchProp('running', false);
-        }
+      if (!op) return false;
+      // check whether it is on timeout/limit
+      if ((op.lastAttempt
+        && (new Date()).getTime() - op.lastAttempt.getTime() <= OP_RETRY_TIMEOUT)
+        || op.attempt >= OP_ATTEMPT_LIMIT) {
+        return false;
       }
+
+      const setBatchProp = (key, value) => commit(SET_BATCH_PROP, { id: batch.id, key, value });
+      setBatchProp('running', true);
+      try {
+        op.running = true;
+        op.attempt += 1;
+        op.lastAttempt = new Date();
+        commit(SET_OPERATION, op);
+        await run(op);
+        op.done = true;
+      } catch (error) {
+        op.done = false;
+        op.error = error;
+      } finally {
+        op.running = false;
+        commit(SET_OPERATION, op);
+        setBatchProp('running', false);
+      }
+      return true;
     },
     [MOVE_BACKUP](context, werk) {
       context.commit(SET_BATCH, backup(context, werk));
