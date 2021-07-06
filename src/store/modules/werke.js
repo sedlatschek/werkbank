@@ -6,11 +6,18 @@ import {
   outputJson,
   readdirSync,
   readFileSync,
+  writeFile,
 } from 'fs-extra';
 import { join } from 'path';
 import Vue from 'vue';
-import { WERK_DIR_NAME, WERK_FILE_NAME } from '@/config';
 import {
+  WERK_DIR_NAME,
+  WERK_FILE_NAME,
+  WERK_ICON_MIME,
+  WERK_ICON_NAME,
+} from '@/config';
+import {
+  ADD_ICON,
   BOOTSTRAP_WERKE,
   WERK_STATE_HOT,
   WERK_STATE_ARCHIVED,
@@ -25,8 +32,8 @@ import {
   REMOVE_WERK,
   WERK_STATE,
   OPEN_WERK_FOLDER,
-} from '../types';
-import { hideDir } from '../../util';
+} from '@/store/types';
+import { hideDir } from '@/util';
 
 function deserialize(werkFile) {
   const werk = JSON.parse(readFileSync(werkFile, { encoding: 'utf8' }));
@@ -148,7 +155,16 @@ export default {
             if (!existsSync(werkFile)) {
               continue;
             }
+
             const werk = deserialize(werkFile);
+
+            // load icon file
+            const iconFile = join(werkDir, WERK_DIR_NAME, WERK_ICON_NAME);
+            if (existsSync(iconFile)) {
+              const icon = `${WERK_ICON_MIME}${readFileSync(iconFile).toString('base64')}`;
+              dispatch(ADD_ICON, { id: werk.id, icon });
+            }
+
             result.push(dispatch(SET_WERK, werk));
           }
 
@@ -193,6 +209,14 @@ export default {
       await ensureDir(werkDir);
       await hideDir(werkDir);
       const werkFile = join(werkDir, WERK_FILE_NAME);
+
+      const icon = getters.icon(werk.id);
+      if (icon) {
+        const iconFile = join(werkDir, WERK_ICON_NAME);
+        const base64 = icon.substr(-1 * (icon.length - WERK_ICON_MIME.length));
+        await writeFile(iconFile, base64, 'base64');
+      }
+
       return outputJson(werkFile, werk);
     },
     [OPEN_WERK_FOLDER]({ getters }, werk) {

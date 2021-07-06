@@ -3,6 +3,15 @@
     :headers="headers"
     :items="items"
     item-key="id">
+    <template v-slot:item.icon="{ item }">
+      <div class="d-flex align-center justify-center">
+        <v-img
+          aria-hidden
+          max-height="24"
+          max-width="24"
+          :src="$store.getters.icon(item.id)"/>
+      </div>
+    </template>
     <template v-slot:item.actions="{ item }">
       <v-icon
         title="Open Werk Folder"
@@ -78,8 +87,11 @@ export default {
   data() {
     return {
       headers: [{
-        text: 'ID',
-        value: 'id',
+        text: 'Icon',
+        value: 'icon',
+        sortable: false,
+        align: 'left',
+        width: 56,
       }, {
         text: 'Name',
         value: 'name',
@@ -92,8 +104,9 @@ export default {
       }, {
         text: 'Actions',
         value: 'actions',
-        sortable: false,
         align: 'right',
+        sortable: false,
+        width: 152,
       }],
     };
   },

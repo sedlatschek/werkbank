@@ -66,6 +66,20 @@
                       :disabled="!!werk.env"
                       v-model="tmp.env"
                       required/>
+                    <v-img
+                      max-height="224"
+                      max-width="224"
+                      :src="icon"/>
+                    <v-file-input
+                      class="mt-2"
+                      clearable
+                      v-model="iconFile"
+                      :rules="iconRules"
+                      accept="image/png"
+                      placeholder="Pick an icon"
+                      prepend-icon="mdi-image"
+                      label="Icon"
+                      @change="iconChange"/>
                     <v-checkbox
                       v-model="tmp.compressOnArchive"
                       label="Compress werk into zip file on archive"/>
@@ -94,7 +108,10 @@
 </template>
 
 <script>
+import { readFileSync } from 'fs-extra';
+import { WERK_ICON_MIME } from '@/config';
 import {
+  ADD_ICON,
   SET_WERK,
   SAVE_WERK,
   OPEN_WERK_FOLDER,
@@ -131,6 +148,8 @@ export default {
   data() {
     return {
       tmp: null,
+      iconFile: null,
+      icon: null,
       valid: false,
       titleRules: [
         (v) => !!v || 'Title is required',
@@ -139,24 +158,38 @@ export default {
         (v) => !!v || 'Name is required',
         (v) => /^[a-zA-Z0-9-_]+$/.test(v) || 'Name can only contain alphanumeric characters, hyphens and underscores',
       ],
+      iconRules: [
+        (v) => !v || v.size < 2000000 || 'Icon size must be less than 2 MB',
+      ],
       WERK_STATE,
     };
   },
   watch: {
     werk(val) {
-      this.tmp = { ...val };
+      this.reset(val);
     },
   },
   methods: {
+    reset(value) {
+      this.tmp = { ...value };
+      this.icon = this.$store.getters.icon(value.id);
+      this.iconFile = null;
+    },
     async save() {
-      this.$store.dispatch(SET_WERK, this.tmp);
+      await this.$store.dispatch(SET_WERK, this.tmp);
+      if (this.icon) {
+        await this.$store.dispatch(ADD_ICON, { id: this.tmp.id, icon: this.icon });
+      }
       await this.$store.dispatch(SAVE_WERK, this.tmp);
       this.$store.dispatch(OPEN_WERK_FOLDER, this.tmp);
       this.$emit('input', false);
     },
+    iconChange(file) {
+      this.icon = `${WERK_ICON_MIME}${readFileSync(file.path).toString('base64')}`;
+    },
   },
   created() {
-    this.tmp = { ...this.value };
+    this.reset(this.value);
   },
 };
 </script>

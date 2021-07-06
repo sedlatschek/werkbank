@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import PersistedState from 'vuex-electron-store';
 import { FILE_STATE } from '@/config';
 import ModuleSettings from './modules/settings';
+import ModuleIcons from './modules/icons';
 import ModuleEnvironments from './modules/environments';
 import ModuleWerke from './modules/werke';
 import ModuleQueue from './modules/queue';
@@ -38,6 +39,7 @@ export default new Vuex.Store({
   },
   modules: {
     ModuleSettings,
+    ModuleIcons,
     ModuleEnvironments,
     ModuleWerke,
     ModuleQueue,

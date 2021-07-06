@@ -28,6 +28,9 @@ export const RELOAD_WERK = 'RELOAD_WERK';
 export const SAVE_WERK = 'SAVE_WERK';
 export const OPEN_WERK_FOLDER = 'OPEN_WERK_FOLDER';
 
+// icons
+export const ADD_ICON = 'ADD_ICON';
+
 // operations
 export const OP_COPY_FILE = 'OP_COPY_FILE';
 export const OP_MOVE_FILE = 'OP_MOVE_FILE';
