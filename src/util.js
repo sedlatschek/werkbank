@@ -1,6 +1,6 @@
 import { homedir, platform } from 'os';
 import { join } from 'path';
-import winattr from 'winattr';
+import { set } from '@akryum/winattr';
 
 export function getAppDataPath() {
   const curPlatform = platform();
@@ -24,7 +24,7 @@ export function pad(number) {
 export function hideDir(dir) {
   return new Promise((resolve, reject) => {
     if (!platform().startsWith('win')) resolve();
-    winattr.set(dir, { hidden: true }, (error) => {
+    set(dir, { hidden: true }, (error) => {
       if (error) {
         reject(error);
       } else {
