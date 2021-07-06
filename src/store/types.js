@@ -25,6 +25,7 @@ export const ADD_WERK = 'ADD_WERK';
 export const SET_WERK = 'SET_WERK';
 export const RELOAD_WERK = 'RELOAD_WERK';
 export const SAVE_WERK = 'SAVE_WERK';
+export const OPEN_WERK_FOLDER = 'OPEN_WERK_FOLDER';
 
 // operations
 export const OP_COPY_FILE = 'OP_COPY_FILE';

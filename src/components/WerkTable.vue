@@ -5,6 +5,13 @@
     item-key="id">
     <template v-slot:item.actions="{ item }">
       <v-icon
+        title="Open Werk Folder"
+        small
+        class="ml-2"
+        @click.stop="open(item)">
+        mdi-folder-open
+      </v-icon>
+      <v-icon
         title="Edit Werk"
         small
         class="ml-2"
@@ -47,7 +54,7 @@
 </template>
 
 <script>
-import { MOVE_BACKUP } from '@/store/types';
+import { MOVE_BACKUP, OPEN_WERK_FOLDER } from '@/store/types';
 
 export default {
   props: {
@@ -91,6 +98,9 @@ export default {
     };
   },
   methods: {
+    open(werk) {
+      this.$store.dispatch(OPEN_WERK_FOLDER, werk);
+    },
     down(werk) {
       this.$store.dispatch(this.downAction, werk);
     },

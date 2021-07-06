@@ -94,7 +94,12 @@
 </template>
 
 <script>
-import { SET_WERK, SAVE_WERK, WERK_STATE } from '@/store/types';
+import {
+  SET_WERK,
+  SAVE_WERK,
+  OPEN_WERK_FOLDER,
+  WERK_STATE,
+} from '@/store/types';
 import dateUtil from '@/mixins/dateUtil';
 import DateField from './DateField.vue';
 import EnvironmentSelect from './EnvironmentSelect.vue';
@@ -146,6 +151,7 @@ export default {
     async save() {
       this.$store.dispatch(SET_WERK, this.tmp);
       await this.$store.dispatch(SAVE_WERK, this.tmp);
+      this.$store.dispatch(OPEN_WERK_FOLDER, this.tmp);
       this.$emit('input', false);
     },
   },

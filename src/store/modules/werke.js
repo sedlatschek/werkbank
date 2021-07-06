@@ -1,3 +1,4 @@
+import { exec } from 'child_process';
 import {
   ensureDir,
   existsSync,
@@ -22,6 +23,7 @@ import {
   SET_GATHERING_WERKE,
   RELOAD_WERK,
   WERK_STATE,
+  OPEN_WERK_FOLDER,
 } from '../types';
 import { hideDir } from '../../util';
 
@@ -182,6 +184,10 @@ export default {
       await hideDir(werkDir);
       const werkFile = join(werkDir, WERK_FILE_NAME);
       return outputJson(werkFile, werk);
+    },
+    [OPEN_WERK_FOLDER]({ getters }, werk) {
+      const dir = getters.dirFor(werk);
+      exec(`start "" "${dir}"`);
     },
   },
 };
