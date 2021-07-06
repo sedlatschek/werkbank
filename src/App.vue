@@ -7,8 +7,20 @@
       <h1 class="font-weight-light">Werkbank</h1>
       <v-spacer></v-spacer>
       <v-btn
-        title="Gather Werke"
+        title="Open Settings"
         class="ml-5"
+        fab
+        small
+        dark
+        color="teal lighten-1"
+        @click="showSettings = true">
+        <v-icon dark>
+          mdi-cog
+        </v-icon>
+      </v-btn>
+      <v-btn
+        title="Gather Werke"
+        class="ml-3"
         fab
         small
         dark
@@ -34,6 +46,7 @@
 
     <v-main>
       <v-container class="pt-12">
+        <settings v-model="showSettings"/>
         <werk-trash-dialog
           v-model="showWerkTrashDialog"
           :werk="werkToTrash"
@@ -96,6 +109,7 @@ import {
   WERK_STATE_HOT,
 } from '@/store/types';
 import Queue from './components/Queue.vue';
+import Settings from './components/Settings.vue';
 import WerkTrashDialog from './components/WerkTrashDialog.vue';
 import WerkEdit from './components/WerkEdit.vue';
 import WerkTable from './components/WerkTable.vue';
@@ -107,16 +121,19 @@ export default {
     WerkTrashDialog,
     WerkEdit,
     WerkTable,
+    Settings,
   },
   computed: {
     ...mapGetters([
       'hotWerke',
       'coldWerke',
       'archivedWerke',
+      'setting_dirs',
     ]),
   },
   data() {
     return {
+      showSettings: false,
       showWerkEdit: false,
       werkToEdit: null,
       showWerkTrashDialog: false,
@@ -130,7 +147,7 @@ export default {
   },
   methods: {
     gatherWerke() {
-      const dirs = Object.values(this.$store.getters.settings.directories);
+      const dirs = this.$store.getters.setting_dirs;
       dirs.forEach((dir) => this.$store.dispatch(GATHER_WERKE, dir));
     },
     createWerk() {
@@ -156,6 +173,10 @@ export default {
       this.showWerkTrashDialog = true;
       this.werkToTrash = werk;
     },
+  },
+  mounted() {
+    // open settings if not configured yet
+    this.showSettings = this.setting_dirs.some((dir) => !dir);
   },
 };
 </script>

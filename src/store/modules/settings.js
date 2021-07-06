@@ -4,11 +4,9 @@ import { SET_SETTING } from '../types';
 export default {
   state: {
     settings: {
-      directories: {
-        hot: 'tmp/hot',
-        cold: 'tmp/cold',
-        archive: 'tmp/archive',
-      },
+      dir_hot: null,
+      dir_cold: null,
+      dir_archive: null,
       gatherOnStartup: true,
     },
   },
@@ -17,15 +15,22 @@ export default {
       return state.settings;
     },
     setting_dir_hot(state) {
-      return state.settings.directories.hot;
+      return state.settings.dir_hot;
     },
     setting_dir_cold(state) {
-      return state.settings.directories.cold;
+      return state.settings.dir_cold;
     },
     setting_dir_archive(state) {
-      return state.settings.directories.archive;
+      return state.settings.dir_archive;
     },
-    setting_dir: (state) => (werkState) => Object.values(state.settings.directories)[werkState],
+    setting_dirs(state) {
+      return [
+        state.settings.dir_hot,
+        state.settings.dir_cold,
+        state.settings.dir_archive,
+      ];
+    },
+    setting_dir: (state, getters) => (werkState) => getters.setting_dirs[werkState],
   },
   mutations: {
     [SET_SETTING](state, { key, value }) {
