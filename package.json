@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "serve": "yarn electron:serve",
+    "build": "yarn raw:build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "raw:serve": "vue-cli-service serve",
