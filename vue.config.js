@@ -2,6 +2,8 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
+        appId: 'de.simonsedlatschek.werkbank',
+        productName: 'Werkbank',
         win: {
           icon: 'public/win.ico',
         },
