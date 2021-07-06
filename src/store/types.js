@@ -23,6 +23,7 @@ export const WERK_STATE = {
 };
 export const ADD_WERK = 'ADD_WERK';
 export const SET_WERK = 'SET_WERK';
+export const REMOVE_WERK = 'REMOVE_WERK';
 export const RELOAD_WERK = 'RELOAD_WERK';
 export const SAVE_WERK = 'SAVE_WERK';
 export const OPEN_WERK_FOLDER = 'OPEN_WERK_FOLDER';
@@ -47,6 +48,7 @@ export const MOVE_BACKUP = 'MOVE_BACKUP';
 export const MOVE_HEATUP = 'MOVE_HEATUP';
 export const MOVE_ARCHIVE = 'MOVE_ARCHIVE';
 export const MOVE_RETRIEVE = 'MOVE_RETRIEVE';
+export const MOVE_TRASH = 'MOVE_TRASH';
 
 // queue
 export const BOOTSTRAP_QUEUE = 'BOOTSTRAP_QUEUE';

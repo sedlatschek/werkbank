@@ -22,7 +22,7 @@
         title="Delete Werk"
         small
         class="ml-2"
-        @click.stop="$emit('delete', item)">
+        @click.stop="$emit('trash', item)">
         mdi-delete
       </v-icon>
       <v-icon

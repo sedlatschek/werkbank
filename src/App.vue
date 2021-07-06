@@ -34,6 +34,10 @@
 
     <v-main>
       <v-container class="pt-12">
+        <werk-trash-dialog
+          v-model="showWerkTrashDialog"
+          :werk="werkToTrash"
+          @confirm="$store.dispatch(MOVE_TRASH, $event)"/>
         <werk-edit
           v-model="showWerkEdit"
           :werk="werkToEdit"/>
@@ -49,7 +53,8 @@
               enable-backup
               :down-action="MOVE_FREEZE"
               :items="hotWerke"
-              @edit="editWerk"/>
+              @edit="editWerk"
+              @trash="trashWerk"/>
           </v-col>
         </v-row>
         <v-row>
@@ -59,7 +64,8 @@
               :items="coldWerke"
               :up-action="MOVE_HEATUP"
               :down-action="MOVE_ARCHIVE"
-              @edit="editWerk"/>
+              @edit="editWerk"
+              @trash="trashWerk"/>
           </v-col>
         </v-row>
         <v-row>
@@ -68,7 +74,8 @@
             <werk-table
               :items="archivedWerke"
               :up-action="MOVE_RETRIEVE"
-              @edit="editWerk"/>
+              @edit="editWerk"
+              @trash="trashWerk"/>
           </v-col>
         </v-row>
       </v-container>
@@ -85,9 +92,11 @@ import {
   MOVE_HEATUP,
   MOVE_ARCHIVE,
   MOVE_RETRIEVE,
+  MOVE_TRASH,
   WERK_STATE_HOT,
 } from '@/store/types';
 import Queue from './components/Queue.vue';
+import WerkTrashDialog from './components/WerkTrashDialog.vue';
 import WerkEdit from './components/WerkEdit.vue';
 import WerkTable from './components/WerkTable.vue';
 
@@ -95,6 +104,7 @@ export default {
   name: 'App',
   components: {
     Queue,
+    WerkTrashDialog,
     WerkEdit,
     WerkTable,
   },
@@ -109,10 +119,13 @@ export default {
     return {
       showWerkEdit: false,
       werkToEdit: null,
+      showWerkTrashDialog: false,
+      werkToTrash: null,
       MOVE_FREEZE,
       MOVE_HEATUP,
       MOVE_ARCHIVE,
       MOVE_RETRIEVE,
+      MOVE_TRASH,
     };
   },
   methods: {
@@ -138,6 +151,10 @@ export default {
     editWerk(werk) {
       this.werkToEdit = werk;
       this.showWerkEdit = true;
+    },
+    trashWerk(werk) {
+      this.showWerkTrashDialog = true;
+      this.werkToTrash = werk;
     },
   },
 };

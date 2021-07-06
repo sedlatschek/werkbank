@@ -22,6 +22,7 @@ import {
   SET_GATHERING_WERKE_PROGRESS,
   SET_GATHERING_WERKE,
   RELOAD_WERK,
+  REMOVE_WERK,
   WERK_STATE,
   OPEN_WERK_FOLDER,
 } from '../types';
@@ -79,6 +80,12 @@ export default {
     },
     [SET_WERK](state, { index, werk }) {
       Vue.set(state.werke, index, werk);
+    },
+    [REMOVE_WERK](state, id) {
+      const index = state.werke.findIndex((w) => w.id === id);
+      if (index !== -1) {
+        state.werke.splice(index, 1);
+      }
     },
     [SET_GATHERING_WERKE](state, value) {
       Vue.set(state, 'gatheringWerke', !!value);
@@ -162,18 +169,21 @@ export default {
         commit(SET_WERK, { index, werk });
       }
     },
-    [RELOAD_WERK]({ dispatch, getters }, id) {
+    [RELOAD_WERK]({ commit, dispatch, getters }, id) {
       const werk = getters.werkById(id);
       if (werk) {
-        Object.keys(WERK_STATE).forEach((werkState) => {
+        const werkStates = Object.keys(WERK_STATE);
+        for (let i = 0; i < werkStates.length; i += 1) {
+          const werkState = werkStates[i];
           const dir = getters.dirFor(werk, werkState);
           const werkFile = join(dir, WERK_DIR_NAME, WERK_FILE_NAME);
           if (existsSync(werkFile)) {
             const reloadedWerk = deserialize(werkFile);
             return dispatch(SET_WERK, reloadedWerk);
           }
-          return false;
-        });
+        }
+        // remove werk if it does not exist in any folder
+        commit(REMOVE_WERK, id);
       }
       return false;
     },

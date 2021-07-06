@@ -50,6 +50,7 @@ import {
   MOVE_ARCHIVE,
   WERK_STATE_ARCHIVED,
   MOVE_RETRIEVE,
+  MOVE_TRASH,
 } from '../types';
 
 async function run(op) {
@@ -428,6 +429,28 @@ function retrieve(store, werk) {
   return batch;
 }
 
+function trash(store, werk) {
+  const batch = createBatch(MOVE_TRASH, werk);
+  const tmp = { ...werk };
+
+  // determine directory paths
+  const dir = store.getters.dirFor(werk);
+  const werkDir = join(dir, WERK_DIR_NAME);
+  const werkFile = join(werkDir, WERK_FILE_NAME);
+
+  // mark werk as moving
+  tmp.moving = true;
+  batch.writeFile(werkFile, JSON.stringify(tmp));
+
+  // delete directory
+  batch.delete(dir);
+
+  // reload werk state to trigger deletion
+  batch.reloadWerk(werk.id);
+
+  return batch;
+}
+
 export default {
   state: {
     queue: [],
@@ -544,6 +567,9 @@ export default {
     },
     [MOVE_RETRIEVE](context, werk) {
       context.commit(SET_BATCH, retrieve(context, werk));
+    },
+    [MOVE_TRASH](context, werk) {
+      context.commit(SET_BATCH, trash(context, werk));
     },
   },
 };
