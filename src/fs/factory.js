@@ -36,7 +36,7 @@ export function createBatch(type, werk) {
     werkId: werk.id,
     created: new Date(),
     type,
-    attempts: 0,
+    attempt: 0,
     operations: [],
     done() {
       return this.operations.filter((o) => !o.done).length === 0;

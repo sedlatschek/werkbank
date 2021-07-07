@@ -71,6 +71,15 @@
                     <template v-slot:item.lastAttempt="{ item }">
                       <span class="text-no-wrap">{{ item.lastAttempt | prettyDate }}</span>
                     </template>
+                    <template v-slot:item.actions="{ item }">
+                      <v-icon
+                        v-if="item.error"
+                        title="Reset Operation"
+                        small
+                        @click.stop="$store.commit(RESET_OPERATION, item.id)">
+                        mdi-reload
+                      </v-icon>
+                    </template>
                   </v-data-table>
                 </td>
               </template>
@@ -84,6 +93,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { RESET_OPERATION } from '@/store/types';
 import dateUtil from '@/mixins/dateUtil';
 import TableTitle from './TableTitle.vue';
 
@@ -115,7 +125,7 @@ export default {
         sortable: false,
       }, {
         text: 'Attempts',
-        value: 'attempts',
+        value: 'attempt',
         sortable: false,
       }],
       operationHeader: [{
@@ -125,18 +135,23 @@ export default {
       }, {
         text: 'Status',
         value: 'status',
+        align: 'center',
         sortable: false,
+        width: 120,
       }, {
         text: 'Type',
         value: 'type',
+        align: 'center',
         sortable: false,
       }, {
         text: 'Attempts',
         value: 'attempt',
+        align: 'center',
         sortable: false,
       }, {
         text: 'Last Attempt',
         value: 'lastAttempt',
+        align: 'center',
         sortable: false,
       }, {
         text: 'Source',
@@ -150,8 +165,15 @@ export default {
         text: 'Error',
         value: 'error',
         sortable: false,
+      }, {
+        text: 'Actions',
+        value: 'actions',
+        align: 'right',
+        sortable: false,
+        width: 80,
       }],
       expanded: [],
+      RESET_OPERATION,
     };
   },
 };

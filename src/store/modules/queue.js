@@ -26,6 +26,7 @@ import {
   MOVE_RETRIEVE,
   MOVE_TRASH,
   SET_WERK_MOVING,
+  RESET_OPERATION,
 } from '../types';
 
 export default {
@@ -60,6 +61,17 @@ export default {
         const index = state.queue[i].operations.findIndex((o) => o.id === operation.id);
         if (index !== -1) {
           Vue.set(state.queue[i].operations, index, operation);
+          break;
+        }
+      }
+    },
+    [RESET_OPERATION](state, id) {
+      for (let i = 0; i < state.queue.length; i += 1) {
+        const index = state.queue[i].operations.findIndex((o) => o.id === id);
+        if (index !== -1) {
+          Vue.set(state.queue[i].operations[index], 'error', null);
+          Vue.set(state.queue[i].operations[index], 'attempt', 0);
+          Vue.set(state.queue[i].operations[index], 'lastAttempt', null);
           break;
         }
       }
@@ -130,7 +142,9 @@ export default {
 
       const setBatchProp = (key, value) => commit(SET_BATCH_PROP, { id: batch.id, key, value });
       setBatchProp('running', true);
+      setBatchProp('attempt', batch.attempt + 1);
       try {
+        op.error = null;
         op.running = true;
         op.attempt += 1;
         op.lastAttempt = new Date();
@@ -139,7 +153,7 @@ export default {
         op.done = true;
       } catch (error) {
         op.done = false;
-        op.error = error;
+        op.error = error.message;
       } finally {
         op.running = false;
         commit(SET_OPERATION, op);

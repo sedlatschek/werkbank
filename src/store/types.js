@@ -48,6 +48,7 @@ export const OP_ZIP_DIR = 'OP_ZIP_DIR';
 export const OP_UNZIP = 'OP_UNZIP';
 export const OP_RELOAD_WERK = 'OP_RELOAD_WERK';
 export const SET_OPERATION = 'SET_OPERATION';
+export const RESET_OPERATION = 'RESET_OPERATION';
 
 // moves
 export const MOVE_FREEZE = 'MOVE_FREEZE';
