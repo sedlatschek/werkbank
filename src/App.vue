@@ -19,6 +19,18 @@
         </v-icon>
       </v-btn>
       <v-btn
+        title="Environments"
+        class="ml-3"
+        fab
+        small
+        dark
+        color="teal lighten-1"
+        @click="showEnvironments = true">
+        <v-icon dark>
+          mdi-iframe-outline
+        </v-icon>
+      </v-btn>
+      <v-btn
         title="Gather Werke"
         class="ml-3"
         fab
@@ -46,6 +58,7 @@
 
     <v-main>
       <v-container class="pt-12">
+        <environments v-model="showEnvironments"/>
         <settings v-model="showSettings"/>
         <werk-trash-dialog
           v-model="showWerkTrashDialog"
@@ -108,6 +121,7 @@ import {
   MOVE_TRASH,
   WERK_STATE_HOT,
 } from '@/store/types';
+import Environments from './components/Environments.vue';
 import Queue from './components/Queue.vue';
 import Settings from './components/Settings.vue';
 import WerkTrashDialog from './components/WerkTrashDialog.vue';
@@ -117,6 +131,7 @@ import WerkTable from './components/WerkTable.vue';
 export default {
   name: 'App',
   components: {
+    Environments,
     Queue,
     WerkTrashDialog,
     WerkEdit,
@@ -133,6 +148,7 @@ export default {
   },
   data() {
     return {
+      showEnvironments: false,
       showSettings: false,
       showWerkEdit: false,
       werkToEdit: null,

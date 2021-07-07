@@ -1,5 +1,121 @@
-import { environments as defaultEnvironments } from '@/defaults.json';
-import { BOOTSTRAP_ENVIRONMENTS, ADD_ENVIRONMENTS, CLEAR_ENVIRONMENTS } from '@/store/types';
+import Vue from 'vue';
+import { BOOTSTRAP_ENVIRONMENTS, SET_ENVIRONMENT, REMOVE_ENVIRONMENT } from '@/store/types';
+
+const defaults = [{
+  handle: 'audio',
+  name: 'Audio',
+  dir: 'Audio',
+  ignore: [],
+},
+{
+  handle: 'cpp',
+  name: 'C++',
+  dir: 'code\\cpp',
+  ignore: [],
+},
+{
+  handle: 'csharp',
+  name: 'C#',
+  dir: 'code\\csharp',
+  ignore: [],
+},
+{
+  handle: 'delphi7',
+  name: 'Delphi 7',
+  dir: 'code\\delphi\\7',
+  ignore: [],
+},
+{
+  handle: 'delphi10',
+  name: 'Delphi 10',
+  dir: 'code\\delphi\\10',
+  ignore: [],
+},
+{
+  handle: 'docker',
+  name: 'Docker',
+  dir: 'code\\docker',
+  ignore: [],
+},
+{
+  handle: 'Java',
+  name: 'java',
+  dir: 'code\\java',
+  ignore: [],
+},
+{
+  handle: 'js',
+  name: 'JavaScript',
+  dir: 'code\\web',
+  ignore: [
+    'bower_components',
+    'node_modules',
+  ],
+},
+{
+  handle: 'md',
+  name: 'Markdown',
+  dir: 'code\\md',
+  ignore: [],
+},
+{
+  handle: 'ps',
+  name: 'Photoshop',
+  dir: 'Bild',
+  ignore: [],
+},
+{
+  handle: 'php',
+  name: 'PHP',
+  dir: 'code\\web',
+  ignore: [
+    'bower_components',
+    'node_modules',
+    'vendor',
+  ],
+},
+{
+  handle: 'picture',
+  name: 'Picture',
+  dir: 'Bild',
+  ignore: [],
+},
+{
+  handle: 'premiere',
+  name: 'Premiere',
+  dir: 'Video',
+  ignore: [],
+},
+{
+  handle: 'python',
+  name: 'Python',
+  dir: 'code\\python',
+  ignore: [],
+},
+{
+  handle: 'tf',
+  name: 'Terraform',
+  dir: 'code\\terraform',
+  ignore: [],
+},
+{
+  handle: 'uml',
+  name: 'UML',
+  dir: 'uml',
+  ignore: [],
+},
+{
+  handle: 'vegas',
+  name: 'Vegas',
+  dir: 'Video',
+  ignore: [],
+},
+{
+  handle: 'wmm',
+  name: 'Windows Movie Maker',
+  dir: 'Video',
+  ignore: [],
+}];
 
 export default {
   state: {
@@ -9,29 +125,36 @@ export default {
     environments(state) {
       return state.environments;
     },
-    environmentByHandle: (state) => function (handle) {
-      return state.environments.find((env) => env.handle === handle);
-    },
+    envByHandle: (state) => (handle) => state.environments.find((env) => env.handle === handle),
   },
   mutations: {
-    [ADD_ENVIRONMENTS](state, environments) {
-      state.environments = state.environments.concat(environments);
+    [SET_ENVIRONMENT](state, environment) {
+      const index = state.environments.findIndex((env) => env.handle === environment.handle);
+      if (index === -1) {
+        state.environments.push(environment);
+      } else {
+        Vue.set(state.environments, index, environment);
+      }
     },
-    [CLEAR_ENVIRONMENTS](state) {
-      state.environments = [];
+    [REMOVE_ENVIRONMENT](state, handle) {
+      const index = state.environments.findIndex((env) => env.handle === handle);
+      if (index !== -1) {
+        state.environments.splice(index, 1);
+      }
     },
   },
   actions: {
-    [BOOTSTRAP_ENVIRONMENTS]({ dispatch, getters }) {
+    [BOOTSTRAP_ENVIRONMENTS]({ commit, getters }) {
       if (getters.environments.length === 0) {
-        dispatch(ADD_ENVIRONMENTS, defaultEnvironments);
+        // only store defaults when environments are still empty
+        defaults.forEach((env) => commit(SET_ENVIRONMENT, env));
       }
     },
-    [ADD_ENVIRONMENTS]({ commit }, environments) {
-      commit(ADD_ENVIRONMENTS, environments);
+    [SET_ENVIRONMENT]({ commit }, environment) {
+      commit(SET_ENVIRONMENT, environment);
     },
-    [CLEAR_ENVIRONMENTS]({ commit }) {
-      commit(CLEAR_ENVIRONMENTS);
+    [REMOVE_ENVIRONMENT]({ commit }, handle) {
+      commit(REMOVE_ENVIRONMENT, handle);
     },
   },
 };

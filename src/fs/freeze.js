@@ -14,7 +14,7 @@ export default function (store, werk) {
     throw new Error('Can not freeze. State expected to be "hot"');
   }
 
-  const env = store.getters.environmentByHandle(werk.env);
+  const env = store.getters.envByHandle(werk.env);
   const batch = createBatch(MOVE_FREEZE, werk);
   const tmp = { ...werk };
   const { ignore } = env;

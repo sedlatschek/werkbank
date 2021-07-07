@@ -59,6 +59,7 @@ export default {
       return state.werke;
     },
     werkById: (state) => (id) => state.werke.find((werk) => werk.id === id),
+    werkeByEnv: (state) => (env) => state.werke.filter((werk) => werk.env === env),
     hotWerke(state) {
       return state.werke.filter((werk) => werk.state === WERK_STATE_HOT);
     },
@@ -76,9 +77,9 @@ export default {
     },
     dirFor: (state, getters) => (werk, werkState = null) => {
       const desiredState = (werkState == null) ? werk.state : werkState;
-      const env = getters.environmentByHandle(werk.env);
+      const env = getters.envByHandle(werk.env);
       const baseDir = getters.setting_dir(desiredState);
-      return join(env.dir.replace(/<base>/, baseDir), werk.name);
+      return join(baseDir, env.dir, werk.name);
     },
   },
   mutations: {
@@ -115,6 +116,12 @@ export default {
     [GATHER_WERKE]({ commit, dispatch, getters }, dir) {
       console.log(`Gather werke in ${dir}`);
       return new Promise((resolve, reject) => {
+        if (!dir) {
+          reject(new Error('Directory is not specified'));
+        }
+        if (!existsSync(dir)) {
+          reject(new Error(`${dir} does not exist`));
+        }
         try {
           commit(SET_GATHERING_WERKE, true);
           commit(SET_GATHERING_WERKE_PROGRESS, {
@@ -127,7 +134,7 @@ export default {
           const directories = [...new Set(getters.environments.map((e) => e.dir))];
 
           for (let i = 0; i < directories.length; i += 1) {
-            const envDir = directories[i].replace(/<base>/, dir);
+            const envDir = join(dir, directories[i]);
             // skip if path does not exist
             if (!existsSync(envDir)) {
               continue;

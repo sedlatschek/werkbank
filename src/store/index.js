@@ -19,22 +19,20 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   plugins: [
     PersistedState.create({
-      dev: process.env.NODE_ENV !== 'production',
+      // dev: process.env.NODE_ENV !== 'production',
       fileName: FILE_STATE.replace(/.json$/, ''),
       paths: [
-        'environments',
-        'queue',
-        'settings',
+        'ModuleEnvironments',
+        'ModuleQueue',
+        'ModuleSettings',
       ],
     }),
   ],
   actions: {
-    [BOOTSTRAP]({ dispatch }) {
+    async [BOOTSTRAP]({ dispatch }) {
       dispatch(BOOTSTRAP_QUEUE);
-      return Promise.all([
-        dispatch(BOOTSTRAP_ENVIRONMENTS),
-        dispatch(BOOTSTRAP_WERKE),
-      ]);
+      await dispatch(BOOTSTRAP_ENVIRONMENTS);
+      await dispatch(BOOTSTRAP_WERKE);
     },
   },
   modules: {

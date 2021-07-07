@@ -9,7 +9,7 @@ export default function (store, werk) {
     throw new Error('Can not backup. Werk state expected to be "hot"');
   }
 
-  const env = store.getters.environmentByHandle(werk.env);
+  const env = store.getters.envByHandle(werk.env);
   const batch = createBatch(MOVE_BACKUP, werk);
   const { ignore } = env;
 
