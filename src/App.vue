@@ -7,8 +7,38 @@
       <h1 class="font-weight-light">Werkbank</h1>
       <v-spacer/>
       <v-btn
-        title="Open Settings"
+        title="Gather Werke"
         class="ml-5"
+        fab
+        small
+        dark
+        color="teal lighten-1"
+        @click="gatherWerke">
+        <v-icon dark>
+          mdi-find-replace
+        </v-icon>
+      </v-btn>
+      <v-badge
+        :content="queue.length.toString()"
+        :value="queue.length > 0"
+        color="accent"
+        overlap>
+        <v-btn
+          title="Queue"
+          class="ml-3"
+          fab
+          small
+          dark
+          color="teal lighten-1"
+          @click="showQueue = true">
+          <v-icon dark>
+            mdi-tray-full
+          </v-icon>
+        </v-btn>
+      </v-badge>
+      <v-btn
+        title="Open Settings"
+        class="ml-3"
         fab
         small
         dark
@@ -31,18 +61,6 @@
         </v-icon>
       </v-btn>
       <v-btn
-        title="Gather Werke"
-        class="ml-3"
-        fab
-        small
-        dark
-        color="teal lighten-1"
-        @click="gatherWerke">
-        <v-icon dark>
-          mdi-find-replace
-        </v-icon>
-      </v-btn>
-      <v-btn
         title="Create Werk"
         class="ml-3"
         fab
@@ -56,11 +74,9 @@
       </v-btn>
     </v-app-bar>
     <v-main>
-      <v-container class="pt-12">
-        <environments v-model="showEnvironments"/>
-        <settings v-model="showSettings"/>
-      </v-container>
-      <queue ref="queue"/>
+      <environments v-model="showEnvironments"/>
+      <settings v-model="showSettings"/>
+      <queue v-model="showQueue"/>
       <werke ref="werke"/>
     </v-main>
   </v-app>
@@ -84,12 +100,14 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'queue',
       'setting_dirs',
     ]),
   },
   data() {
     return {
       showEnvironments: false,
+      showQueue: false,
       showSettings: false,
     };
   },
