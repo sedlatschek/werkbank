@@ -13,7 +13,8 @@
         small
         dark
         color="teal lighten-1"
-        @click="gatherWerke">
+        :disabled="gatheringWerke"
+        @click.stop="$store.dispatch(GATHER_ALL_WERKE)">
         <v-icon dark>
           mdi-find-replace
         </v-icon>
@@ -84,7 +85,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { GATHER_WERKE } from '@/store/types';
+import { GATHER_ALL_WERKE } from '@/store/types';
 import Environments from './components/Environments.vue';
 import Queue from './components/Queue.vue';
 import Settings from './components/Settings.vue';
@@ -100,6 +101,7 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'gatheringWerke',
       'queue',
       'setting_dirs',
     ]),
@@ -109,13 +111,10 @@ export default {
       showEnvironments: false,
       showQueue: false,
       showSettings: false,
+      GATHER_ALL_WERKE,
     };
   },
   methods: {
-    gatherWerke() {
-      const dirs = this.$store.getters.setting_dirs;
-      dirs.forEach((dir) => this.$store.dispatch(GATHER_WERKE, dir));
-    },
     createWerk() {
       this.$refs.werke.createWerk();
     },

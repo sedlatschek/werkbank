@@ -23,14 +23,14 @@ export default new Vuex.Store({
       fileName: FILE_STATE.replace(/.json$/, ''),
       paths: [
         'ModuleEnvironments',
-        'ModuleQueue',
+        'ModuleQueue.queue',
         'ModuleSettings',
       ],
     }),
   ],
   actions: {
     async [BOOTSTRAP]({ dispatch }) {
-      dispatch(BOOTSTRAP_QUEUE);
+      await dispatch(BOOTSTRAP_QUEUE);
       await dispatch(BOOTSTRAP_ENVIRONMENTS);
       await dispatch(BOOTSTRAP_WERKE);
     },

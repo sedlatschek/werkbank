@@ -10,9 +10,9 @@ export const REMOVE_ENVIRONMENT = 'REMOVE_ENVIRONMENT';
 
 // werke
 export const BOOTSTRAP_WERKE = 'BOOTSTRAP_WERKE';
+export const GATHER_ALL_WERKE = 'GATHER_ALL_WERKE';
 export const GATHER_WERKE = 'GATHER_WERKE';
 export const SET_GATHERING_WERKE = 'SET_GATHERING_WERKE';
-export const SET_GATHERING_WERKE_PROGRESS = 'SET_GATHERING_WERKE_PROGRESS';
 export const WERK_STATE_HOT = 0;
 export const WERK_STATE_COLD = 1;
 export const WERK_STATE_ARCHIVED = 2;
@@ -25,8 +25,11 @@ export const ADD_WERK = 'ADD_WERK';
 export const SET_WERK = 'SET_WERK';
 export const REMOVE_WERK = 'REMOVE_WERK';
 export const RELOAD_WERK = 'RELOAD_WERK';
+export const LOAD_WERK_IN = 'LOAD_WERK_IN';
 export const SAVE_WERK = 'SAVE_WERK';
 export const OPEN_WERK_FOLDER = 'OPEN_WERK_FOLDER';
+export const PARSE_DIR = 'PARSE_DIR';
+export const PARSE_DIRS = 'PARSE_DIRS';
 
 // icons
 export const ADD_ICON = 'ADD_ICON';

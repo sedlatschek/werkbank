@@ -1,11 +1,11 @@
 import { exec } from 'child_process';
 import {
   ensureDir,
-  existsSync,
-  lstatSync,
+  lstat,
   outputJson,
-  readdirSync,
-  readFileSync,
+  pathExists,
+  readdir,
+  readFile,
   writeFile,
 } from 'fs-extra';
 import { join } from 'path';
@@ -25,18 +25,28 @@ import {
   ADD_WERK,
   SET_WERK,
   SAVE_WERK,
+  GATHER_ALL_WERKE,
   GATHER_WERKE,
-  SET_GATHERING_WERKE_PROGRESS,
   SET_GATHERING_WERKE,
   RELOAD_WERK,
+  LOAD_WERK_IN,
   REMOVE_WERK,
   WERK_STATE,
   OPEN_WERK_FOLDER,
+  PARSE_DIR,
+  PARSE_DIRS,
 } from '@/store/types';
 import { hideDir } from '@/util';
 
-function deserialize(werkFile) {
-  const werk = JSON.parse(readFileSync(werkFile, { encoding: 'utf8' }));
+class WerkFileMissingError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'WerkFileMissingError';
+  }
+}
+
+async function deserialize(werkFile) {
+  const werk = JSON.parse(await readFile(werkFile, { encoding: 'utf8' }));
   werk.created = new Date(werk.created);
   for (let i = 0; i < werk.history.length; i += 1) {
     werk.history[i].ts = new Date(werk.history[i].ts);
@@ -47,11 +57,6 @@ function deserialize(werkFile) {
 export default {
   state: {
     gatheringWerke: false,
-    gatheringWerkeProgress: {
-      cur: 0,
-      total: 0,
-      item: null,
-    },
     werke: [],
   },
   getters: {
@@ -72,9 +77,6 @@ export default {
     },
     gatheringWerke(state) {
       return state.gatheringWerke;
-    },
-    gatheringWerkeProgress(state) {
-      return state.gatheringWerkeProgress;
     },
     dirFor: (state, getters) => (werk, werkState = null) => {
       const desiredState = (werkState == null) ? werk.state : werkState;
@@ -97,93 +99,72 @@ export default {
       }
     },
     [SET_GATHERING_WERKE](state, value) {
-      Vue.set(state, 'gatheringWerke', !!value);
-    },
-    [SET_GATHERING_WERKE_PROGRESS](state, progress) {
-      Vue.set(state, 'gatheringWerkeProgress', progress);
+      Vue.set(state, 'gatheringWerke', value);
     },
   },
   actions: {
     [BOOTSTRAP_WERKE]({ dispatch, getters }) {
       if (getters.settings.gatherOnStartup) {
-        return Promise.all([
-          dispatch(GATHER_WERKE, getters.setting_dir_hot),
-          dispatch(GATHER_WERKE, getters.setting_dir_cold),
-          dispatch(GATHER_WERKE, getters.setting_dir_archive),
-        ]);
+        dispatch(GATHER_ALL_WERKE);
       }
-      return false;
     },
-    [GATHER_WERKE]({ commit, dispatch, getters }, dir) {
-      console.log(`Gather werke in ${dir}`);
-      return new Promise((resolve, reject) => {
-        if (!dir) {
-          reject(new Error('Directory is not specified'));
-        }
-        if (!existsSync(dir)) {
-          reject(new Error(`${dir} does not exist`));
-        }
-        try {
-          commit(SET_GATHERING_WERKE, true);
-          commit(SET_GATHERING_WERKE_PROGRESS, {
-            cur: 0,
-            total: 1,
-            item: 'Gathering directories...',
-          });
-
-          let werkDirs = [];
-          const directories = [...new Set(getters.environments.map((e) => e.dir))];
-
-          for (let i = 0; i < directories.length; i += 1) {
-            const envDir = join(dir, directories[i]);
-            // skip if path does not exist
-            if (!existsSync(envDir)) {
-              continue;
-            }
-            // skip if path is not directory
-            const dirStats = lstatSync(envDir);
-            if (!dirStats.isDirectory()) {
-              continue;
-            }
-            werkDirs = werkDirs.concat((readdirSync(envDir)).map((name) => join(envDir, name)));
-          }
-
-          const result = [];
-          for (let i = 0; i < werkDirs.length; i += 1) {
-            const werkDir = werkDirs[i];
-
-            commit(SET_GATHERING_WERKE_PROGRESS, {
-              cur: i + 1,
-              total: werkDirs.length,
-              item: `Searching in ${werkDir}`,
-            });
-
-            const werkFile = join(werkDir, WERK_DIR_NAME, WERK_FILE_NAME);
-            // skip if dir has no werk file
-            if (!existsSync(werkFile)) {
-              continue;
-            }
-
-            const werk = deserialize(werkFile);
-
-            // load icon file
-            const iconFile = join(werkDir, WERK_DIR_NAME, WERK_ICON_NAME);
-            if (existsSync(iconFile)) {
-              const icon = `${WERK_ICON_MIME}${readFileSync(iconFile).toString('base64')}`;
-              dispatch(ADD_ICON, { id: werk.id, icon });
-            }
-
-            result.push(dispatch(SET_WERK, werk));
-          }
-
-          resolve(Promise.all(result));
-        } catch (ex) {
-          commit(SET_GATHERING_WERKE, false);
-          reject(ex);
-        } finally {
-          commit(SET_GATHERING_WERKE, false);
-        }
+    [GATHER_ALL_WERKE]({ commit, dispatch, getters }) {
+      commit(SET_GATHERING_WERKE, true);
+      Promise.all([
+        dispatch(GATHER_WERKE, getters.setting_dir_hot),
+        dispatch(GATHER_WERKE, getters.setting_dir_cold),
+        dispatch(GATHER_WERKE, getters.setting_dir_archive),
+      ]).finally(() => {
+        commit(SET_GATHERING_WERKE, false);
       });
+    },
+    async [GATHER_WERKE]({ dispatch, getters }, dir) {
+      console.log(GATHER_WERKE, dir);
+      if (!dir) {
+        throw new Error('Directory is not specified');
+      }
+      if (!await pathExists(dir)) {
+        throw new Error(`${dir} does not exist`);
+      }
+      const directories = [...new Set(getters.environments.map((e) => e.dir))];
+      const promises = [];
+      directories.forEach(async (directory) => {
+        promises.push(dispatch(PARSE_DIRS, join(dir, directory)));
+      });
+      await Promise.all(promises);
+    },
+    async [PARSE_DIRS]({ dispatch }, directory) {
+      // skip if path does not exist
+      if (!await pathExists(directory)) return;
+
+      // skip if path is not a directory
+      const dirStats = await lstat(directory);
+      if (!dirStats.isDirectory()) return;
+
+      const subDirs = (await readdir(directory)).map((name) => join(directory, name));
+      const promises = [];
+      subDirs.forEach((subDir) => {
+        promises.push(dispatch(PARSE_DIR, subDir));
+      });
+      await Promise.all(promises);
+    },
+    async [PARSE_DIR]({ dispatch }, dir) {
+      console.log(PARSE_DIR, dir);
+      const werkFile = join(dir, WERK_DIR_NAME, WERK_FILE_NAME);
+
+      // skip if dir has no werk file
+      if (!await pathExists(werkFile)) return;
+
+      const werk = await deserialize(werkFile);
+
+      // load icon file
+      const iconFile = join(dir, WERK_DIR_NAME, WERK_ICON_NAME);
+      if (await pathExists(iconFile)) {
+        const icon = `${WERK_ICON_MIME}${(await readFile(iconFile)).toString('base64')}`;
+        dispatch(ADD_ICON, { id: werk.id, icon });
+      }
+
+      await dispatch(SET_WERK, werk);
     },
     [SET_WERK]({ commit, getters }, werk) {
       const index = getters.werke.findIndex((w) => w.id === werk.id);
@@ -194,22 +175,33 @@ export default {
       }
     },
     [RELOAD_WERK]({ commit, dispatch, getters }, id) {
+      console.log(RELOAD_WERK, id);
       const werk = getters.werkById(id);
       if (werk) {
-        const werkStates = Object.keys(WERK_STATE);
-        for (let i = 0; i < werkStates.length; i += 1) {
-          const werkState = werkStates[i];
-          const dir = getters.dirFor(werk, werkState);
-          const werkFile = join(dir, WERK_DIR_NAME, WERK_FILE_NAME);
-          if (existsSync(werkFile)) {
-            const reloadedWerk = deserialize(werkFile);
-            return dispatch(SET_WERK, reloadedWerk);
+        const promises = [];
+        Object.keys(WERK_STATE).forEach((werkState) => {
+          promises.push(dispatch(LOAD_WERK_IN, { werk, werkState }));
+        });
+        Promise.any(promises).then((reloadedWerk) => {
+          dispatch(SET_WERK, reloadedWerk);
+        }).catch((error) => {
+          if (error.errors && error.errors.every((e) => e instanceof WerkFileMissingError)) {
+            // remove werk if it does not exist in any folder
+            commit(REMOVE_WERK, id);
           }
-        }
-        // remove werk if it does not exist in any folder
-        commit(REMOVE_WERK, id);
+        });
       }
-      return false;
+    },
+    [LOAD_WERK_IN]({ getters }, { werk, werkState }) {
+      console.log(LOAD_WERK_IN, werkState);
+      return new Promise((resolve, reject) => {
+        const dir = getters.dirFor(werk, werkState);
+        const werkFile = join(dir, WERK_DIR_NAME, WERK_FILE_NAME);
+        pathExists(werkFile).then((exists) => {
+          if (!exists) reject(new WerkFileMissingError('Werkfile does not exist'));
+          deserialize(werkFile).then(resolve).catch(reject);
+        });
+      });
     },
     async [SAVE_WERK]({ getters }, werk) {
       const dir = getters.dirFor(werk);
