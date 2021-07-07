@@ -13,6 +13,7 @@
           label="Hot Vault"
           icon="fire"
           enable-backup
+          :disabled="gatheringWerke"
           :down-action="MOVE_FREEZE"
           :items="hotWerke"
           @edit="editWerk"
@@ -24,6 +25,7 @@
         <werk-table
           label="Cold Vault"
           icon="snowflake"
+          :disabled="gatheringWerke"
           :items="coldWerke"
           :up-action="MOVE_HEATUP"
           :down-action="MOVE_ARCHIVE"
@@ -36,6 +38,7 @@
         <werk-table
           label="Archive"
           icon="archive"
+          :disabled="gatheringWerke"
           :items="archivedWerke"
           :up-action="MOVE_RETRIEVE"
           @edit="editWerk"
@@ -68,6 +71,7 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'gatheringWerke',
       'hotWerke',
       'coldWerke',
       'archivedWerke',

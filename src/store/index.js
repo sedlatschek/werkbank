@@ -28,6 +28,11 @@ export default new Vuex.Store({
       ],
     }),
   ],
+  getters: {
+    busy(state, getters) {
+      return getters.gatheringWerke;
+    },
+  },
   actions: {
     async [BOOTSTRAP]({ dispatch }) {
       await dispatch(BOOTSTRAP_QUEUE);

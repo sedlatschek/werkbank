@@ -74,6 +74,7 @@
         </v-icon>
       </v-btn>
     </v-app-bar>
+    <busy/>
     <v-main>
       <environments v-model="showEnvironments"/>
       <settings v-model="showSettings"/>
@@ -86,6 +87,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { GATHER_ALL_WERKE } from '@/store/types';
+import Busy from './components/Busy.vue';
 import Environments from './components/Environments.vue';
 import Queue from './components/Queue.vue';
 import Settings from './components/Settings.vue';
@@ -94,6 +96,7 @@ import Werke from './components/Werke.vue';
 export default {
   name: 'App',
   components: {
+    Busy,
     Environments,
     Queue,
     Settings,
