@@ -24,6 +24,7 @@ import {
   MOVE_ARCHIVE,
   MOVE_RETRIEVE,
   MOVE_TRASH,
+  SET_WERK_MOVING,
 } from '../types';
 
 export default {
@@ -129,21 +130,27 @@ export default {
       return true;
     },
     [MOVE_BACKUP](context, werk) {
+      context.commit(SET_WERK_MOVING, { id: werk.id, value: true });
       context.commit(SET_BATCH, backup(context, werk));
     },
     [MOVE_FREEZE](context, werk) {
+      context.commit(SET_WERK_MOVING, { id: werk.id, value: true });
       context.commit(SET_BATCH, freeze(context, werk));
     },
     [MOVE_HEATUP](context, werk) {
+      context.commit(SET_WERK_MOVING, { id: werk.id, value: true });
       context.commit(SET_BATCH, heatup(context, werk));
     },
     [MOVE_ARCHIVE](context, werk) {
+      context.commit(SET_WERK_MOVING, { id: werk.id, value: true });
       context.commit(SET_BATCH, archive(context, werk));
     },
     [MOVE_RETRIEVE](context, werk) {
+      context.commit(SET_WERK_MOVING, { id: werk.id, value: true });
       context.commit(SET_BATCH, retrieve(context, werk));
     },
     [MOVE_TRASH](context, werk) {
+      context.commit(SET_WERK_MOVING, { id: werk.id, value: true });
       context.commit(SET_BATCH, trash(context, werk));
     },
   },

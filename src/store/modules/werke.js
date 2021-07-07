@@ -24,6 +24,7 @@ import {
   WERK_STATE_COLD,
   ADD_WERK,
   SET_WERK,
+  SET_WERK_MOVING,
   SAVE_WERK,
   GATHER_ALL_WERKE,
   GATHER_WERKE,
@@ -91,6 +92,12 @@ export default {
     },
     [SET_WERK](state, { index, werk }) {
       Vue.set(state.werke, index, werk);
+    },
+    [SET_WERK_MOVING](state, { id, value }) {
+      const index = state.werke.findIndex((w) => w.id === id);
+      if (index !== -1) {
+        Vue.set(state.werke[index], 'moving', value);
+      }
     },
     [REMOVE_WERK](state, id) {
       const index = state.werke.findIndex((w) => w.id === id);

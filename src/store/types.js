@@ -23,6 +23,7 @@ export const WERK_STATE = {
 };
 export const ADD_WERK = 'ADD_WERK';
 export const SET_WERK = 'SET_WERK';
+export const SET_WERK_MOVING = 'SET_WERK_MOVING';
 export const REMOVE_WERK = 'REMOVE_WERK';
 export const RELOAD_WERK = 'RELOAD_WERK';
 export const LOAD_WERK_IN = 'LOAD_WERK_IN';

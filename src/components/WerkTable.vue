@@ -20,11 +20,25 @@
           :src="$store.getters.icon(item.id)"/>
       </div>
     </template>
+    <template v-slot:item.status="{ item }">
+      <v-chip
+        v-if="item.moving"
+        color="accent"
+        dark>
+        Moving
+      </v-chip>
+      <v-chip
+        v-else
+        light>
+        Idle
+      </v-chip>
+    </template>
     <template v-slot:item.actions="{ item }">
       <v-icon
         title="Open Werk Folder"
         small
         class="ml-2"
+        :disabled="disabled || item.moving"
         @click.stop="open(item)">
         mdi-folder-open
       </v-icon>
@@ -32,6 +46,7 @@
         title="Edit Werk"
         small
         class="ml-2"
+        :disabled="disabled || item.moving"
         @click.stop="$emit('edit', item)">
         mdi-pencil
       </v-icon>
@@ -39,6 +54,7 @@
         title="Delete Werk"
         small
         class="ml-2"
+        :disabled="disabled || item.moving"
         @click.stop="$emit('trash', item)">
         mdi-delete
       </v-icon>
@@ -47,6 +63,7 @@
         title="Backup Werk"
         small
         class="ml-2"
+        :disabled="disabled || item.moving"
         @click.stop="backup(item)">
         mdi-content-save
       </v-icon>
@@ -55,6 +72,7 @@
         title="Heatup Werk"
         small
         class="ml-2"
+        :disabled="disabled || item.moving"
         @click.stop="up(item)">
         mdi-arrow-up-bold
       </v-icon>
@@ -63,6 +81,7 @@
         title="Freeze Werk"
         small
         class="ml-2"
+        :disabled="disabled || item.moving"
         @click.stop="down(item)">
         mdi-arrow-down-bold
       </v-icon>
@@ -101,6 +120,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -110,6 +133,9 @@ export default {
         sortable: false,
         align: 'left',
         width: 56,
+      }, {
+        text: 'Status',
+        value: 'status',
       }, {
         text: 'Name',
         value: 'name',
