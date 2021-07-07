@@ -59,6 +59,7 @@ export default {
       return state.werke;
     },
     werkById: (state) => (id) => state.werke.find((werk) => werk.id === id),
+    werkByName: (state) => (name) => state.werke.find((werk) => werk.name === name),
     werkeByEnv: (state) => (env) => state.werke.filter((werk) => werk.env === env),
     hotWerke(state) {
       return state.werke.filter((werk) => werk.state === WERK_STATE_HOT);

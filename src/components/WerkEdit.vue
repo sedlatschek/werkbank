@@ -156,6 +156,7 @@ export default {
       ],
       nameRules: [
         (v) => !!v || 'Name is required',
+        (v) => (v === this.werk.name || !this.$store.getters.werkByName(v)) || 'Name must be unique',
         (v) => /^[a-zA-Z0-9-_]+$/.test(v) || 'Name can only contain alphanumeric characters, hyphens and underscores',
       ],
       iconRules: [
