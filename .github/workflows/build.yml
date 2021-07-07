@@ -18,7 +18,9 @@ jobs:
           node-version: 14
 
       - name: Run unit tests
-        run: yarn test:unit
+        run: |
+          yarn install
+          yarn test:unit
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
