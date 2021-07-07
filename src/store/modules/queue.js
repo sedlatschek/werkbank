@@ -11,6 +11,7 @@ import {
 import { OP_ATTEMPT_LIMIT, OP_RETRY_TIMEOUT, QUEUE_INTERVAL } from '@/config';
 import {
   BOOTSTRAP_QUEUE,
+  CAST_QUEUE_DATES,
   MOVE_BACKUP,
   MOVE_FREEZE,
   MOVE_HEATUP,
@@ -58,7 +59,7 @@ export default {
       for (let i = 0; i < state.queue.length; i += 1) {
         const index = state.queue[i].operations.findIndex((o) => o.id === operation.id);
         if (index !== -1) {
-          Vue.set(state.queue[i], index, operation);
+          Vue.set(state.queue[i].operations, index, operation);
           break;
         }
       }
@@ -76,6 +77,23 @@ export default {
         dispatch(WORK_QUEUE);
       }, QUEUE_INTERVAL);
       commit(SET_QUEUE_INTERVAL, interval);
+      dispatch(CAST_QUEUE_DATES);
+    },
+    [CAST_QUEUE_DATES]({ commit, getters }) {
+      getters.queue.forEach((batch) => {
+        commit(SET_BATCH_PROP, {
+          id: batch.id,
+          key: 'created',
+          value: new Date(batch.created),
+        });
+        batch.operations.forEach((op) => {
+          commit(SET_OPERATION, {
+            ...op,
+            created: new Date(op.created),
+            lastAttempt: op.lastAttempt ? new Date(op.lastAttempt) : null,
+          });
+        });
+      });
     },
     [WORK_QUEUE]({ commit, dispatch, getters }) {
       if (getters.queue.length > 0) {

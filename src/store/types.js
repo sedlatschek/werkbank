@@ -59,6 +59,7 @@ export const MOVE_TRASH = 'MOVE_TRASH';
 
 // queue
 export const BOOTSTRAP_QUEUE = 'BOOTSTRAP_QUEUE';
+export const CAST_QUEUE_DATES = 'CAST_QUEUE_DATES';
 export const WORK_QUEUE = 'WORK_QUEUE';
 export const RUN_BATCH = 'RUN_BATCH';
 export const SET_BATCH = 'SET_BATCH';
