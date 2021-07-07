@@ -5,8 +5,10 @@
     item-key="handle">
     <template v-slot:top>
       <v-toolbar flat>
-        <v-toolbar-title>Environments</v-toolbar-title>
-        <v-spacer></v-spacer>
+        <table-title
+          label="Environments"
+          icon="iframe-outline"/>
+        <v-spacer/>
         <v-btn
           color="primary"
           dark
@@ -43,8 +45,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import TableTitle from './TableTitle.vue';
 
 export default {
+  components: {
+    TableTitle,
+  },
   computed: {
     ...mapGetters([
       'environments',

@@ -14,7 +14,7 @@
         Do you want to continue?
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer/>
         <v-btn
           text
           @click="$emit('input', false)">

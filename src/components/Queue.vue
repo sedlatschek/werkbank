@@ -1,60 +1,75 @@
 <template>
-  <div>
-    <h2>Queue</h2>
-    <v-data-table
-      :headers="headers"
-      :items="queue"
-      :expanded.sync="expanded"
-      show-expand
-      item-key="id">
-      <template v-slot:expanded-item="{ item }">
-        <td
-          style="padding: 0"
-          :colspan="operationHeader.length">
-          <v-data-table
-            dense
-            hide-default-footer
-            :headers="operationHeader"
-            :items="item.operations"
-            item-key="id">
-            <template v-slot:item.status="{ item }">
-              <v-chip
-                v-if="item.running"
-                color="accent"
-                dark>
-                Running
-              </v-chip>
-              <v-chip
-                v-else-if="item.done"
-                color="success"
-                dark>
-                Done
-              </v-chip>
-              <v-chip
-                v-else-if="item.error"
-                color="error"
-                dark>
-                Error
-              </v-chip>
-              <v-chip v-else>
-                Pending
-              </v-chip>
-            </template>
-            <template v-slot:item.lastAttempt="{ item }">
-              <span class="text-no-wrap">{{ item.lastAttempt | prettyDate }}</span>
-            </template>
-          </v-data-table>
-        </td>
-      </template>
-    </v-data-table>
-  </div>
+  <v-container>
+    <v-row>
+      <v-col>
+        <v-data-table
+          :headers="headers"
+          :items="queue"
+          :expanded.sync="expanded"
+          show-expand
+          item-key="id">
+          <template v-slot:top>
+            <v-toolbar flat>
+              <table-title
+                label="Queue"
+                icon="tray-full"/>
+              <v-spacer/>
+            </v-toolbar>
+          </template>
+          <template v-slot:expanded-item="{ item }">
+            <td
+              style="padding: 0"
+              :colspan="operationHeader.length">
+              <v-data-table
+                dense
+                hide-default-footer
+                :headers="operationHeader"
+                :items="item.operations"
+                item-key="id">
+                <template v-slot:item.status="{ item }">
+                  <v-chip
+                    v-if="item.running"
+                    color="accent"
+                    dark>
+                    Running
+                  </v-chip>
+                  <v-chip
+                    v-else-if="item.done"
+                    color="success"
+                    dark>
+                    Done
+                  </v-chip>
+                  <v-chip
+                    v-else-if="item.error"
+                    color="error"
+                    dark>
+                    Error
+                  </v-chip>
+                  <v-chip v-else>
+                    Pending
+                  </v-chip>
+                </template>
+                <template v-slot:item.lastAttempt="{ item }">
+                  <span class="text-no-wrap">{{ item.lastAttempt | prettyDate }}</span>
+                </template>
+              </v-data-table>
+            </td>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import dateUtil from '@/mixins/dateUtil';
+import TableTitle from './TableTitle.vue';
 
 export default {
+  components: {
+    TableTitle,
+  },
   mixins: [dateUtil],
   computed: {
     ...mapGetters([

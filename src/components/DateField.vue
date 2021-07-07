@@ -17,7 +17,7 @@
     <v-date-picker
       v-model="tmp"
       scrollable>
-      <v-spacer></v-spacer>
+      <v-spacer/>
       <v-btn
         text
         color="primary"

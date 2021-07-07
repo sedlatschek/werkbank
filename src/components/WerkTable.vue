@@ -3,6 +3,14 @@
     :headers="headers"
     :items="items"
     item-key="id">
+    <template v-slot:top>
+      <v-toolbar flat>
+        <table-title
+          :label="label"
+          :icon="icon"/>
+        <v-spacer/>
+      </v-toolbar>
+    </template>
     <template v-slot:item.icon="{ item }">
       <div class="d-flex align-center justify-center">
         <v-img
@@ -64,9 +72,19 @@
 
 <script>
 import { MOVE_BACKUP, OPEN_WERK_FOLDER } from '@/store/types';
+import TableTitle from './TableTitle.vue';
 
 export default {
+  components: {
+    TableTitle,
+  },
   props: {
+    label: {
+      type: String,
+    },
+    icon: {
+      type: String,
+    },
     items: {
       type: Array,
       required: true,

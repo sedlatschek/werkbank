@@ -5,7 +5,7 @@
       color="dark"
       dark>
       <h1 class="font-weight-light">Werkbank</h1>
-      <v-spacer></v-spacer>
+      <v-spacer/>
       <v-btn
         title="Open Settings"
         class="ml-5"
@@ -55,94 +55,35 @@
         </v-icon>
       </v-btn>
     </v-app-bar>
-
     <v-main>
       <v-container class="pt-12">
         <environments v-model="showEnvironments"/>
         <settings v-model="showSettings"/>
-        <werk-trash-dialog
-          v-model="showWerkTrashDialog"
-          :werk="werkToTrash"
-          @confirm="$store.dispatch(MOVE_TRASH, $event)"/>
-        <werk-edit
-          v-model="showWerkEdit"
-          :werk="werkToEdit"/>
-        <v-row>
-          <v-col>
-            <queue/>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <h2 class="mb-5">Hot</h2>
-            <werk-table
-              enable-backup
-              :down-action="MOVE_FREEZE"
-              :items="hotWerke"
-              @edit="editWerk"
-              @trash="trashWerk"/>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <h2 class="mb-5">Cold</h2>
-            <werk-table
-              :items="coldWerke"
-              :up-action="MOVE_HEATUP"
-              :down-action="MOVE_ARCHIVE"
-              @edit="editWerk"
-              @trash="trashWerk"/>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <h2 class="mb-5">Archived</h2>
-            <werk-table
-              :items="archivedWerke"
-              :up-action="MOVE_RETRIEVE"
-              @edit="editWerk"
-              @trash="trashWerk"/>
-          </v-col>
-        </v-row>
       </v-container>
+      <queue ref="queue"/>
+      <werke ref="werke"/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import { v4 as uuid } from 'uuid';
 import { mapGetters } from 'vuex';
-import {
-  GATHER_WERKE,
-  MOVE_FREEZE,
-  MOVE_HEATUP,
-  MOVE_ARCHIVE,
-  MOVE_RETRIEVE,
-  MOVE_TRASH,
-  WERK_STATE_HOT,
-} from '@/store/types';
+import { GATHER_WERKE } from '@/store/types';
 import Environments from './components/Environments.vue';
 import Queue from './components/Queue.vue';
 import Settings from './components/Settings.vue';
-import WerkTrashDialog from './components/WerkTrashDialog.vue';
-import WerkEdit from './components/WerkEdit.vue';
-import WerkTable from './components/WerkTable.vue';
+import Werke from './components/Werke.vue';
 
 export default {
   name: 'App',
   components: {
     Environments,
     Queue,
-    WerkTrashDialog,
-    WerkEdit,
-    WerkTable,
     Settings,
+    Werke,
   },
   computed: {
     ...mapGetters([
-      'hotWerke',
-      'coldWerke',
-      'archivedWerke',
       'setting_dirs',
     ]),
   },
@@ -150,15 +91,6 @@ export default {
     return {
       showEnvironments: false,
       showSettings: false,
-      showWerkEdit: false,
-      werkToEdit: null,
-      showWerkTrashDialog: false,
-      werkToTrash: null,
-      MOVE_FREEZE,
-      MOVE_HEATUP,
-      MOVE_ARCHIVE,
-      MOVE_RETRIEVE,
-      MOVE_TRASH,
     };
   },
   methods: {
@@ -167,27 +99,7 @@ export default {
       dirs.forEach((dir) => this.$store.dispatch(GATHER_WERKE, dir));
     },
     createWerk() {
-      this.werkToEdit = {
-        id: uuid(),
-        title: '',
-        name: '',
-        desc: '',
-        created: new Date(),
-        env: null,
-        compressOnArchive: true,
-        state: WERK_STATE_HOT,
-        moving: false,
-        history: [],
-      };
-      this.showWerkEdit = true;
-    },
-    editWerk(werk) {
-      this.werkToEdit = werk;
-      this.showWerkEdit = true;
-    },
-    trashWerk(werk) {
-      this.showWerkTrashDialog = true;
-      this.werkToTrash = werk;
+      this.$refs.werke.createWerk();
     },
   },
   mounted() {

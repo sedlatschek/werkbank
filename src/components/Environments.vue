@@ -16,7 +16,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-toolbar-title>Environments</v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer/>
       </v-toolbar>
       <v-container class="mt-10">
         <environment-edit
