@@ -6,42 +6,63 @@ const defaults = [{
   name: 'Audio',
   dir: 'Audio',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'cpp',
   name: 'C++',
   dir: 'code\\cpp',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'csharp',
   name: 'C#',
   dir: 'code\\csharp',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'delphi7',
   name: 'Delphi 7',
   dir: 'code\\delphi\\7',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'delphi10',
   name: 'Delphi 10',
   dir: 'code\\delphi\\10',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'docker',
   name: 'Docker',
   dir: 'code\\docker',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'Java',
   name: 'java',
   dir: 'code\\java',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'js',
@@ -51,18 +72,27 @@ const defaults = [{
     'bower_components',
     'node_modules',
   ],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'md',
   name: 'Markdown',
   dir: 'code\\md',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'ps',
   name: 'Photoshop',
   dir: 'Bild',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'php',
@@ -73,48 +103,72 @@ const defaults = [{
     'node_modules',
     'vendor',
   ],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'picture',
   name: 'Picture',
   dir: 'Bild',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'premiere',
   name: 'Premiere',
   dir: 'Video',
   ignore: [],
+  preset: {
+    compressOnArchive: false,
+  },
 },
 {
   handle: 'python',
   name: 'Python',
   dir: 'code\\python',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'tf',
   name: 'Terraform',
   dir: 'code\\terraform',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'uml',
   name: 'UML',
   dir: 'uml',
   ignore: [],
+  preset: {
+    compressOnArchive: true,
+  },
 },
 {
   handle: 'vegas',
   name: 'Vegas',
   dir: 'Video',
   ignore: [],
+  preset: {
+    compressOnArchive: false,
+  },
 },
 {
   handle: 'wmm',
   name: 'Windows Movie Maker',
   dir: 'Video',
   ignore: [],
+  preset: {
+    compressOnArchive: false,
+  },
 }];
 
 export default {

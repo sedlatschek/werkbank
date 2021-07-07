@@ -65,6 +65,7 @@
                     <environment-select
                       :disabled="!!werk.env"
                       v-model="tmp.env"
+                      @input="applyPreset"
                       required/>
                     <v-img
                       max-height="224"
@@ -187,6 +188,12 @@ export default {
     },
     iconChange(file) {
       this.icon = `${WERK_ICON_MIME}${readFileSync(file.path).toString('base64')}`;
+    },
+    applyPreset(handle) {
+      const env = this.$store.getters.envByHandle(handle);
+      Object.keys(env.preset).forEach((key) => {
+        this.tmp[key] = env.preset[key];
+      });
     },
   },
   created() {

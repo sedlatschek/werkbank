@@ -21,6 +21,9 @@
     <template v-slot:item.ignore="{ item }">
       {{ item.ignore.join(', ') }}
     </template>
+    <template v-slot:item.preset="{ item }">
+      {{ JSON.stringify(item.preset) }}
+    </template>
     <template v-slot:item.werke="{ item }">
       {{ $store.getters.werkeByEnv(item.handle).length || 0 }}
     </template>
@@ -75,6 +78,9 @@ export default {
       }, {
         text: 'Ignore',
         value: 'ignore',
+      }, {
+        text: 'Preset',
+        value: 'preset',
       }, {
         text: 'Werke',
         value: 'werke',

@@ -55,6 +55,9 @@
               <tags
                 label="Ignored folders"
                 v-model="tmp.ignore"/>
+              <v-checkbox
+                v-model="tmp.preset.compressOnArchive"
+                label="Compress werk into zip file on archive"/>
             </v-col>
           </v-row>
         </v-form>
