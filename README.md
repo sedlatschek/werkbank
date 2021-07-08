@@ -36,7 +36,6 @@ Additionaly environments allow to preset werk configurations. I want my video fi
 - add LICENSE
 - add environment icons
 - add environment import/export
-- add option to start werkbank minimized
 - add latest werke to tray menu
 - fix scrollbar jumps when showing fullscreen dialogs
 - add dark/light theme

@@ -50,6 +50,9 @@
                 v-model="tmp.launchWithSystem"
                 label="Launch Werkbank on system startup"/>
               <v-checkbox
+                v-model="tmp.launchMinimized"
+                label="Launch Werkbank minimized"/>
+              <v-checkbox
                 v-model="tmp.gatherOnStartup"
                 label="Gather werke on launch"/>
             </v-col>

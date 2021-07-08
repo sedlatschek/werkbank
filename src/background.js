@@ -9,7 +9,8 @@ import {
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import PersistedState from 'vuex-electron-store';
-import { FILE_TRAY_ICON } from './config';
+import { FILE_STATE, FILE_TRAY_ICON } from './config';
+import { pathExists, readJson } from 'fs-extra';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -23,6 +24,11 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 async function createWindow() {
+  // Load last state from disk
+  const state = await pathExists(FILE_STATE)
+    ? (await readJson(FILE_STATE)).state
+    : null;
+
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1280,
@@ -42,6 +48,10 @@ async function createWindow() {
     },
     autoHideMenuBar: true,
   });
+  // Immediately hide window if minimized launch is configured
+  if (state && state.ModuleSettings.settings.launchMinimized) {
+    win.hide();
+  }
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode

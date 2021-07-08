@@ -15,6 +15,7 @@ export default {
       dir_archive: null,
       gatherOnStartup: true,
       launchWithSystem: false,
+      launchMinimized: false,
     },
   },
   getters: {
