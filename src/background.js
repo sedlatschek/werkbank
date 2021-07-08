@@ -1,4 +1,6 @@
-import { app, protocol, BrowserWindow } from 'electron';
+import {
+  app, ipcMain, protocol, BrowserWindow,
+} from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import PersistedState from 'vuex-electron-store';
@@ -20,7 +22,6 @@ async function createWindow() {
     minWidth: 760,
     minHeight: 300,
     webPreferences: {
-
       // Required for Spectron testing
       enableRemoteModule: !!process.env.IS_TEST,
 
@@ -70,6 +71,16 @@ app.on('ready', async () => {
     }
   }
   createWindow();
+});
+
+// process changes in settings
+ipcMain.on('setting-changed', (event, { key, value }) => {
+  if (isDevelopment) return;
+  if (key === 'launchWithSystem') {
+    app.setLoginItemSettings({
+      openAtLogin: value,
+    });
+  }
 });
 
 // Exit cleanly on request from parent process in development mode.

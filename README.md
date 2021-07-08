@@ -44,9 +44,9 @@ Additionaly environments allow to preset werk configurations. I want my video fi
 - add github/gitlab support
   - repository creation
   - button in table row to open remote url in browser
-- add system startup launch
 - add keybindings
 - add screenshots of application it is finished
+- fix auto update: https://nklayman.github.io/vue-cli-plugin-electron-builder/guide/recipes.html#auto-update
 
 ## Development
 

@@ -1,5 +1,11 @@
+import { ipcRenderer } from 'electron';
 import Vue from 'vue';
 import { SET_SETTING } from '../types';
+
+// main settings are also passed as an event to be processed in the main thread
+const mainSettings = [
+  'launchWithSystem',
+];
 
 export default {
   state: {
@@ -8,6 +14,7 @@ export default {
       dir_cold: null,
       dir_archive: null,
       gatherOnStartup: true,
+      launchWithSystem: false,
     },
   },
   getters: {
@@ -39,6 +46,9 @@ export default {
   },
   actions: {
     [SET_SETTING]({ commit }, keyValue) {
+      if (mainSettings.includes(keyValue.key)) {
+        ipcRenderer.send('setting-changed', keyValue);
+      }
       commit(SET_SETTING, keyValue);
     },
   },
