@@ -36,6 +36,7 @@ import {
   OPEN_WERK_FOLDER,
   PARSE_DIR,
   PARSE_DIRS,
+  SET_WERK_SEARCH,
 } from '@/store/types';
 import { hideDir } from '@/util';
 
@@ -59,6 +60,7 @@ export default {
   state: {
     gatheringWerke: false,
     werke: [],
+    werkSearch: null,
   },
   getters: {
     werke(state) {
@@ -85,6 +87,9 @@ export default {
       const baseDir = getters.setting_dir(desiredState);
       return join(baseDir, env.dir, werk.name);
     },
+    werkSearch(state) {
+      return state.werkSearch;
+    },
   },
   mutations: {
     [ADD_WERK](state, werk) {
@@ -107,6 +112,9 @@ export default {
     },
     [SET_GATHERING_WERKE](state, value) {
       Vue.set(state, 'gatheringWerke', value);
+    },
+    [SET_WERK_SEARCH](state, filter) {
+      Vue.set(state, 'werkSearch', filter);
     },
   },
   actions: {

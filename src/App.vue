@@ -6,9 +6,10 @@
       dark>
       <h1 class="font-weight-light">Werkbank</h1>
       <v-spacer/>
+      <search/>
+      <v-spacer/>
       <v-btn
         title="Gather Werke"
-        class="ml-5"
         fab
         small
         dark
@@ -90,6 +91,7 @@ import { GATHER_ALL_WERKE } from '@/store/types';
 import Busy from './components/Busy.vue';
 import Environments from './components/Environments.vue';
 import Queue from './components/Queue.vue';
+import Search from './components/Search.vue';
 import Settings from './components/Settings.vue';
 import Werke from './components/Werke.vue';
 
@@ -99,6 +101,7 @@ export default {
     Busy,
     Environments,
     Queue,
+    Search,
     Settings,
     Werke,
   },

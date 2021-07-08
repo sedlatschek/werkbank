@@ -31,6 +31,7 @@ export const SAVE_WERK = 'SAVE_WERK';
 export const OPEN_WERK_FOLDER = 'OPEN_WERK_FOLDER';
 export const PARSE_DIR = 'PARSE_DIR';
 export const PARSE_DIRS = 'PARSE_DIRS';
+export const SET_WERK_SEARCH = 'SET_WERK_SEARCH';
 
 // icons
 export const ADD_ICON = 'ADD_ICON';

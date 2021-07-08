@@ -2,6 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="items"
+    :search="search"
     item-key="id">
     <template v-slot:top>
       <v-toolbar flat>
@@ -123,6 +124,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    search: {
+      type: String,
+      default: null,
     },
   },
   data() {

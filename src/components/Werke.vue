@@ -13,6 +13,7 @@
           label="Hot Vault"
           icon="fire"
           enable-backup
+          :search="werkSearch"
           :disabled="gatheringWerke"
           :down-action="MOVE_FREEZE"
           :items="hotWerke"
@@ -25,6 +26,7 @@
         <werk-table
           label="Cold Vault"
           icon="snowflake"
+          :search="werkSearch"
           :disabled="gatheringWerke"
           :items="coldWerke"
           :up-action="MOVE_HEATUP"
@@ -38,6 +40,7 @@
         <werk-table
           label="Archive"
           icon="archive"
+          :search="werkSearch"
           :disabled="gatheringWerke"
           :items="archivedWerke"
           :up-action="MOVE_RETRIEVE"
@@ -75,6 +78,7 @@ export default {
       'hotWerke',
       'coldWerke',
       'archivedWerke',
+      'werkSearch',
     ]),
   },
   data() {
