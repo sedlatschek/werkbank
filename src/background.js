@@ -21,6 +21,7 @@ async function createWindow() {
     height: 800,
     minWidth: 760,
     minHeight: 300,
+    icon: 'public/win.ico',
     webPreferences: {
       // Required for Spectron testing
       enableRemoteModule: !!process.env.IS_TEST,
