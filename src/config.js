@@ -1,14 +1,15 @@
 import { join } from 'path';
-import { getAppDataPath } from './util';
+import { getAppDataPath } from '@/util';
 
 export const DIR_APPDATA = join(getAppDataPath(), 'werkbank-next');
 export const FILE_STATE = join(DIR_APPDATA, 'werkbank.json');
 export const DIR_ICONS = join(DIR_APPDATA, 'icons');
+export const FILE_TRAY_ICON = join(DIR_APPDATA, 'tray.png');
 
 export const WERK_DIR_NAME = '.werk';
 export const WERK_FILE_NAME = 'werk.json';
 export const WERK_ICON_NAME = 'icon.png';
-export const WERK_ICON_MIME = 'data:image/png;base64,';
+export const PNG_MIME = 'data:image/png;base64,';
 export const GIT_DIR_NAME = '.git';
 export const GIT_ZIP_FILE_NAME = 'git.zip';
 

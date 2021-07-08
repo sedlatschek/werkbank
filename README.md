@@ -36,16 +36,16 @@ Additionaly environments allow to preset werk configurations. I want my video fi
 - add LICENSE
 - add environment icons
 - add environment import/export
-- add tray icon and menu for minimized support
-- remove window menu
+- add option to start werkbank minimized
+- add latest werke to tray menu
 - fix scrollbar jumps when showing fullscreen dialogs
 - add dark/light theme
 - add linux build
 - add github/gitlab support
   - repository creation
   - button in table row to open remote url in browser
-- add keybindings
-- add screenshots of application it is finished
+- add keybindings/shortcuts
+- add screenshots of application once it is finished
 - fix auto update: https://nklayman.github.io/vue-cli-plugin-electron-builder/guide/recipes.html#auto-update
 
 ## Development

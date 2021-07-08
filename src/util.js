@@ -1,4 +1,5 @@
 import { homedir, platform } from 'os';
+import { writeFile } from 'fs-extra';
 import { join } from 'path';
 import { set } from '@akryum/winattr';
 
@@ -32,4 +33,9 @@ export function hideDir(dir) {
       }
     });
   });
+}
+
+export async function saveBase64(file, mime, base64) {
+  const s = base64.substr(-1 * (base64.length - mime.length));
+  await writeFile(file, s, 'base64');
 }

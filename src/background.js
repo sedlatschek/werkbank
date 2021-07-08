@@ -1,11 +1,19 @@
 import {
-  app, ipcMain, protocol, BrowserWindow,
+  app,
+  ipcMain,
+  protocol,
+  BrowserWindow,
+  Menu,
+  Tray
 } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import PersistedState from 'vuex-electron-store';
+import { FILE_TRAY_ICON } from './config';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
+
+let tray = null;
 
 PersistedState.initRenderer();
 
@@ -21,7 +29,8 @@ async function createWindow() {
     height: 800,
     minWidth: 760,
     minHeight: 300,
-    icon: 'public/win.ico',
+    title: 'Werkbank',
+    icon: './src/assets/icon/win.ico',
     webPreferences: {
       // Required for Spectron testing
       enableRemoteModule: !!process.env.IS_TEST,
@@ -43,6 +52,21 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html');
   }
+
+  win.on('minimize', (event) => {
+    event.preventDefault();
+    win.hide();
+  });
+
+  win.on('close', (event) => {
+    if (!app.isQuitting) {
+      event.preventDefault();
+      win.hide();
+      event.returnValue = false;
+    }
+  });
+
+  return win;
 }
 
 // Quit when all windows are closed.
@@ -72,7 +96,31 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString());
     }
   }
-  createWindow();
+  const win = await createWindow();
+
+  tray = new Tray(FILE_TRAY_ICON);
+  if (process.platform === 'win32') {
+    tray.on('click', () => {
+      win.show();
+    });
+  }
+  const menu = Menu.buildFromTemplate([
+    {
+      label: 'Quit',
+      click: () => {
+        win.destroy();
+        app.isQuitting = true;
+        app.quit();
+      },
+    },
+  ]);
+  tray.setToolTip('Werkbank');
+  tray.setContextMenu(menu);
+});
+
+app.on('before-quit', () => {
+  // release tray
+  tray = null;
 });
 
 // process changes in settings

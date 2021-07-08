@@ -110,7 +110,7 @@
 
 <script>
 import { readFileSync } from 'fs-extra';
-import { WERK_ICON_MIME } from '@/config';
+import { PNG_MIME } from '@/config';
 import {
   ADD_ICON,
   SET_WERK,
@@ -187,7 +187,7 @@ export default {
       this.$emit('input', false);
     },
     iconChange(file) {
-      this.icon = `${WERK_ICON_MIME}${readFileSync(file.path).toString('base64')}`;
+      this.icon = `${PNG_MIME}${readFileSync(file.path).toString('base64')}`;
     },
     applyPreset(handle) {
       const env = this.$store.getters.envByHandle(handle);

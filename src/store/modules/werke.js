@@ -6,14 +6,13 @@ import {
   pathExists,
   readdir,
   readFile,
-  writeFile,
 } from 'fs-extra';
 import { join } from 'path';
 import Vue from 'vue';
 import {
   WERK_DIR_NAME,
   WERK_FILE_NAME,
-  WERK_ICON_MIME,
+  PNG_MIME,
   WERK_ICON_NAME,
 } from '@/config';
 import {
@@ -38,7 +37,7 @@ import {
   PARSE_DIRS,
   SET_WERK_SEARCH,
 } from '@/store/types';
-import { hideDir } from '@/util';
+import { hideDir, saveBase64 } from '@/util';
 
 class WerkFileMissingError extends Error {
   constructor(message) {
@@ -175,7 +174,7 @@ export default {
       // load icon file
       const iconFile = join(dir, WERK_DIR_NAME, WERK_ICON_NAME);
       if (await pathExists(iconFile)) {
-        const icon = `${WERK_ICON_MIME}${(await readFile(iconFile)).toString('base64')}`;
+        const icon = `${PNG_MIME}${(await readFile(iconFile)).toString('base64')}`;
         dispatch(ADD_ICON, { id: werk.id, icon });
       }
 
@@ -228,8 +227,7 @@ export default {
       const icon = getters.icon(werk.id);
       if (icon) {
         const iconFile = join(werkDir, WERK_ICON_NAME);
-        const base64 = icon.substr(-1 * (icon.length - WERK_ICON_MIME.length));
-        await writeFile(iconFile, base64, 'base64');
+        await saveBase64(iconFile, PNG_MIME, icon);
       }
 
       return outputJson(werkFile, werk);

@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import { ensureDir } from 'fs-extra';
 import { autoUpdater } from 'electron-updater';
-import { DIR_ICONS } from '@/config';
 import { BOOTSTRAP } from '@/store/types';
 import App from './App.vue';
+import init from './init';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
@@ -12,7 +11,7 @@ import '@mdi/font/css/materialdesignicons.css';
 Vue.config.productionTip = false;
 
 (async () => {
-  await ensureDir(DIR_ICONS);
+  await init();
   window.app = new Vue({
     store,
     vuetify,
