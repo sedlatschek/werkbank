@@ -8,6 +8,7 @@ import {
   shell,
 } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
+import { autoUpdater } from 'electron-updater';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import PersistedState from 'vuex-electron-store';
 import { FILE_STATE, FILE_TRAY_ICON } from './config';
@@ -62,6 +63,7 @@ async function createWindow() {
     createProtocol('app');
     // Load the index.html when not in development
     win.loadURL('app://./index.html');
+    autoUpdater.checkForUpdatesAndNotify();
   }
 
   win.on('minimize', (event) => {

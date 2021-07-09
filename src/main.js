@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import { autoUpdater } from 'electron-updater';
 import { BOOTSTRAP } from '@/store/types';
 import App from './App.vue';
 import init from './init';
@@ -18,5 +17,4 @@ Vue.config.productionTip = false;
     render(h) { return h(App); },
   }).$mount('#app');
   store.dispatch(BOOTSTRAP);
-  autoUpdater.checkForUpdatesAndNotify();
 })();
