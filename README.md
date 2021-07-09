@@ -32,7 +32,6 @@ Additionaly environments allow to preset werk configurations. I want my video fi
 ## ToDo
 
 - fix the spinner flicker when gathering werke
-- add CHANGELOG
 - add environment icons
 - add environment import/export
 - add latest werke to tray menu

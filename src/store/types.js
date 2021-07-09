@@ -1,5 +1,10 @@
 export const BOOTSTRAP = 'BOOTSTRAP';
 
+// app
+export const BOOTSTRAP_APP = 'BOOTSTRAP_APP';
+export const SET_LAST_USED_VERSION = 'SET_LAST_USED_VERSION';
+export const SET_OPEN_WITH_CHANGELOG = 'SET_OPEN_WITH_CHANGELOG';
+
 // settings
 export const SET_SETTING = 'SET_SETTING';
 

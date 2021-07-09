@@ -4,7 +4,8 @@ import {
   protocol,
   BrowserWindow,
   Menu,
-  Tray
+  Tray,
+  shell,
 } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
@@ -107,6 +108,15 @@ app.on('ready', async () => {
     }
   }
   const win = await createWindow();
+
+  // The method will prevent electron to open external
+  // links and will pass them to the default browser instead.
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    setImmediate(() => {
+      shell.openExternal(url);
+    });
+    return { action: 'deny' };
+  });
 
   tray = new Tray(FILE_TRAY_ICON);
   if (process.platform === 'win32') {
