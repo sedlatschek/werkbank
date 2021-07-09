@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { getAppDataPath } from '@/util';
 
-export const DIR_APPDATA = join(getAppDataPath(), 'Werkbank');
+export const DIR_APPDATA = join(getAppDataPath(), 'werkbank');
 export const FILE_STATE = join(DIR_APPDATA, 'werkbank.json');
 export const DIR_ICONS = join(DIR_APPDATA, 'icons');
 export const FILE_TRAY_ICON = join(DIR_APPDATA, 'tray.png');
