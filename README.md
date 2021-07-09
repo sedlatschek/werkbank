@@ -62,4 +62,7 @@ yarn test:unit
 
 # Lints and fixes files
 yarn lint
+
+# Publish new version
+yarn version --new-version x.x.x
 ```
