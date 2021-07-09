@@ -82,6 +82,7 @@
       <queue v-model="showQueue"/>
       <werke ref="werke"/>
     </v-main>
+    <foot/>
   </v-app>
 </template>
 
@@ -90,6 +91,7 @@ import { mapGetters } from 'vuex';
 import { GATHER_ALL_WERKE } from '@/store/types';
 import Busy from './components/Busy.vue';
 import Environments from './components/Environments.vue';
+import Foot from './components/Foot.vue';
 import Queue from './components/Queue.vue';
 import Search from './components/Search.vue';
 import Settings from './components/Settings.vue';
@@ -100,6 +102,7 @@ export default {
   components: {
     Busy,
     Environments,
+    Foot,
     Queue,
     Search,
     Settings,

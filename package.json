@@ -2,7 +2,8 @@
   "name": "werkbank",
   "version": "0.1.0",
   "description": "A simple tool to manage and store work pieces",
-  "author": "Simon Sedlatschek",
+  "license": "ISC",
+  "author": "Simon Sedlatschek <code@sedlatschek.com>",
   "private": true,
   "repository": {
     "type": "git",
@@ -17,9 +18,10 @@
     "raw:build": "vue-cli-service build",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
-    "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps",
-    "release": "electron-builder --windows --linux --publish always"
+    "postinstall": "electron-builder install-app-deps && yarn generate-disclaimer",
+    "postuninstall": "electron-builder install-app-deps && yarn generate-disclaimer",
+    "release": "electron-builder --windows --linux --publish always",
+    "generate-disclaimer": "yarn licenses generate-disclaimer --silent > ./src/assets/disclaimer.txt"
   },
   "main": "background.js",
   "dependencies": {
@@ -30,6 +32,7 @@
     "electron-devtools-installer": "^3.2.0",
     "electron-updater": "^4.3.9",
     "fs-extra": "^10.0.0",
+    "raw-loader": "^4.0.2",
     "roboto-fontface": "*",
     "slugify": "^1.5.3",
     "uuid": "^8.3.2",
