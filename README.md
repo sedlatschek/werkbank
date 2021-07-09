@@ -48,7 +48,7 @@ Additionaly environments allow to preset werk configurations. I want my video fi
 ## Development
 
 ```sh
-# setup
+# Setup
 yarn install
 
 # Compiles and hot-reloads for development
@@ -64,5 +64,5 @@ yarn test:unit
 yarn lint
 
 # Publish new version
-yarn version --new-version x.x.x
+yarn version --new-version x.x.x && git commit -am x.x.x && git push && git push -tags
 ```
