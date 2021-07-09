@@ -21,7 +21,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   plugins: [
     PersistedState.create({
-      // dev: process.env.NODE_ENV !== 'production',
+      dev: process.env.NODE_ENV !== 'production',
       fileName: FILE_STATE.replace(/.json$/, ''),
       paths: [
         'ModuleApp',

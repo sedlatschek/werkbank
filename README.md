@@ -43,12 +43,14 @@ Additionaly environments allow to preset werk configurations. I want my video fi
   - button in table row to open remote url in browser
 - add keybindings/shortcuts
 - add screenshots of application once it is finished
-- fix auto update: https://nklayman.github.io/vue-cli-plugin-electron-builder/guide/recipes.html#auto-update
+- only allow one instance of werkbank to run
+- fix icons
+- fix push notifications title (currently shows `electron.app.Werkbank`)
 
 ## Development
 
 ```sh
-# Setup
+# setup
 yarn install
 
 # Compiles and hot-reloads for development
@@ -64,5 +66,5 @@ yarn test:unit
 yarn lint
 
 # Publish new version
-yarn version --new-version x.x.x && git commit -am x.x.x && git push && git push -tags
+yarn new-version x.x.x
 ```
