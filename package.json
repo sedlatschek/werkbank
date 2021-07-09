@@ -1,6 +1,6 @@
 {
   "name": "werkbank",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A simple tool to manage and store work pieces",
   "license": "ISC",
   "author": "Simon Sedlatschek <code@sedlatschek.com>",
@@ -22,7 +22,7 @@
     "postuninstall": "electron-builder install-app-deps && yarn generate-disclaimer",
     "release": "electron-builder --windows --linux --publish always",
     "generate-disclaimer": "yarn licenses generate-disclaimer --silent > ./src/assets/disclaimer.txt",
-    "testxx": "echo --version && echo --version"
+    "new-version": "node version.js"
   },
   "main": "background.js",
   "dependencies": {
