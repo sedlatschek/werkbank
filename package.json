@@ -1,6 +1,6 @@
 {
   "name": "werkbank",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A simple tool to manage and store work pieces",
   "license": "ISC",
   "author": "Simon Sedlatschek <code@sedlatschek.com>",
