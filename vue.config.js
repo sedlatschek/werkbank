@@ -13,7 +13,7 @@ module.exports = {
         appId: 'com.sedlatschek.werkbank',
         productName: 'Werkbank',
         win: {
-          icon: 'public/win.ico',
+          icon: 'src/assets/icon/win.ico',
         },
         mac: {
           icon: 'public/icon-1536x1536.png',
