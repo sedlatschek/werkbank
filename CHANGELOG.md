@@ -5,6 +5,7 @@
 - fix push notifications title
 - only allow one instance of werkbank to run
 - fix dialog titlebar border radius
+- add button to create werk from tray menu
 
 ## [v0.1.1], [v0.1.2], [v0.1.3], [v0.1.4], [v0.1.5]
 - Update experiments 🧪

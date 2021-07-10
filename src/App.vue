@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron';
 import { mapGetters } from 'vuex';
 import { GATHER_ALL_WERKE } from '@/store/types';
 import Busy from './components/Busy.vue';
@@ -127,6 +128,9 @@ export default {
     createWerk() {
       this.$refs.werke.createWerk();
     },
+  },
+  created() {
+    ipcRenderer.on('create-werk', this.createWerk);
   },
   mounted() {
     // open settings if not configured yet

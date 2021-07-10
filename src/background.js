@@ -151,6 +151,16 @@ app.on('ready', async () => {
     }
     const menu = Menu.buildFromTemplate([
       {
+        label: 'Create Werk',
+        click: () => {
+          win.webContents.send('create-werk');
+          if (win.isMinimized()) {
+            win.restore();
+          }
+          win.focus();
+        },
+      },
+      {
         label: 'Quit',
         click: () => {
           win.destroy();
