@@ -14,7 +14,8 @@ import PersistedState from 'vuex-electron-store';
 import { FILE_STATE, FILE_TRAY_ICON } from './config';
 import { pathExists, readJson } from 'fs-extra';
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
+const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
+const TITLE = 'Werkbank';
 
 let tray = null;
 
@@ -37,7 +38,7 @@ async function createWindow() {
     height: 800,
     minWidth: 760,
     minHeight: 300,
-    title: 'Werkbank',
+    title: TITLE,
     icon: './src/assets/icon/win.ico',
     webPreferences: {
       // Required for Spectron testing
@@ -101,7 +102,14 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
+  if (process.platform === 'win32')
+  {
+    // Set the title to be shown on windows for push notifactions.
+    // Otherwise the sender 'electron.app.Werkbank' would appear.
+    app.setAppUserModelId(TITLE);
+  }
+
+  if (IS_DEVELOPMENT && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
       await installExtension(VUEJS_DEVTOOLS);
@@ -136,7 +144,7 @@ app.on('ready', async () => {
       },
     },
   ]);
-  tray.setToolTip('Werkbank');
+  tray.setToolTip(TITLE);
   tray.setContextMenu(menu);
 });
 
@@ -147,7 +155,7 @@ app.on('before-quit', () => {
 
 // process changes in settings
 ipcMain.on('setting-changed', (event, { key, value }) => {
-  if (isDevelopment) return;
+  if (IS_DEVELOPMENT) return;
   if (key === 'launchWithSystem') {
     app.setLoginItemSettings({
       openAtLogin: value,
@@ -156,7 +164,7 @@ ipcMain.on('setting-changed', (event, { key, value }) => {
 });
 
 // Exit cleanly on request from parent process in development mode.
-if (isDevelopment) {
+if (IS_DEVELOPMENT) {
   if (process.platform === 'win32') {
     process.on('message', (data) => {
       if (data === 'graceful-exit') {
