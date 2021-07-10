@@ -43,7 +43,6 @@ Additionaly environments allow to preset werk configurations. I want my video fi
   - button in table row to open remote url in browser
 - add keybindings/shortcuts
 - add screenshots of application once it is finished
-- only allow one instance of werkbank to run
 - Module parse error Unexpected character '�'
 
 ## Development

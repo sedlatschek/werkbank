@@ -3,6 +3,7 @@
 ## [v0.1.6]
 - fix application icon for windows
 - fix push notifications title
+- only allow one instance of werkbank to run
 
 ## [v0.1.1], [v0.1.2], [v0.1.3], [v0.1.4], [v0.1.5]
 - Update experiments 🧪

@@ -117,35 +117,51 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString());
     }
   }
-  const win = await createWindow();
 
-  // The method will prevent electron to open external
-  // links and will pass them to the default browser instead.
-  win.webContents.setWindowOpenHandler(({ url }) => {
-    setImmediate(() => {
-      shell.openExternal(url);
+  if (!app.requestSingleInstanceLock()) {
+    // Quit immediately if lock could not be obtained.
+    app.isQuitting = true;
+    app.quit();
+  } else {
+    const win = await createWindow();
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+      // Someone tried to run a second instance, we should focus our window.
+      if (win) {
+        if (win.isMinimized()) {
+          win.restore();
+        }
+        win.focus();
+      }
     });
-    return { action: 'deny' };
-  });
 
-  tray = new Tray(FILE_TRAY_ICON);
-  if (process.platform === 'win32') {
-    tray.on('click', () => {
-      win.show();
+    // The method will prevent electron to open external
+    // links and will pass them to the default browser instead.
+    win.webContents.setWindowOpenHandler(({ url }) => {
+      setImmediate(() => {
+        shell.openExternal(url);
+      });
+      return { action: 'deny' };
     });
-  }
-  const menu = Menu.buildFromTemplate([
-    {
-      label: 'Quit',
-      click: () => {
-        win.destroy();
-        app.isQuitting = true;
-        app.quit();
+
+    tray = new Tray(FILE_TRAY_ICON);
+    if (process.platform === 'win32') {
+      tray.on('click', () => {
+        win.show();
+      });
+    }
+    const menu = Menu.buildFromTemplate([
+      {
+        label: 'Quit',
+        click: () => {
+          win.destroy();
+          app.isQuitting = true;
+          app.quit();
+        },
       },
-    },
-  ]);
-  tray.setToolTip(TITLE);
-  tray.setContextMenu(menu);
+    ]);
+    tray.setToolTip(TITLE);
+    tray.setContextMenu(menu);
+  }
 });
 
 app.on('before-quit', () => {
