@@ -8,6 +8,7 @@ import {
   readFile,
 } from 'fs-extra';
 import { join } from 'path';
+import { ipcRenderer } from 'electron';
 import Vue from 'vue';
 import {
   WERK_DIR_NAME,
@@ -89,6 +90,19 @@ export default {
     werkSearch(state) {
       return state.werkSearch;
     },
+    latestWerke(state) {
+      const latestWerke = Array.from(state.werke);
+      latestWerke.sort((a, b) => {
+        const y = a.history && a.history.length > 0
+          ? a.history[a.history.length - 1].ts.getTime()
+          : a.created.getTime();
+        const z = b.history && b.history.length > 0
+          ? b.history[b.history.length - 1].ts.getTime()
+          : b.created.getTime();
+        return z - y;
+      });
+      return latestWerke.slice(0, 10);
+    },
   },
   mutations: {
     [ADD_WERK](state, werk) {
@@ -118,6 +132,9 @@ export default {
   },
   actions: {
     [BOOTSTRAP_WERKE]({ dispatch, getters }) {
+      ipcRenderer.on('open-werk', (event, werk) => {
+        dispatch(OPEN_WERK_FOLDER, werk);
+      });
       if (getters.settings.gatherOnStartup) {
         dispatch(GATHER_ALL_WERKE);
       }

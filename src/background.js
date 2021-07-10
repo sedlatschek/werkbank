@@ -17,7 +17,10 @@ import { pathExists, readJson } from 'fs-extra';
 const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 const TITLE = 'Werkbank';
 
-let tray = null;
+const top = {
+  tray: null,
+  win: null,
+};
 
 PersistedState.initRenderer();
 
@@ -123,60 +126,74 @@ app.on('ready', async () => {
     app.isQuitting = true;
     app.quit();
   } else {
-    const win = await createWindow();
+    top.win = await createWindow();
     app.on('second-instance', (event, commandLine, workingDirectory) => {
       // Someone tried to run a second instance, we should focus our window.
-      if (win) {
-        if (win.isMinimized()) {
-          win.restore();
+      if (top.win) {
+        if (top.win.isMinimized()) {
+          top.win.restore();
         }
-        win.focus();
+        top.win.focus();
       }
     });
 
     // The method will prevent electron to open external
     // links and will pass them to the default browser instead.
-    win.webContents.setWindowOpenHandler(({ url }) => {
+    top.win.webContents.setWindowOpenHandler(({ url }) => {
       setImmediate(() => {
         shell.openExternal(url);
       });
       return { action: 'deny' };
     });
 
-    tray = new Tray(FILE_TRAY_ICON);
-    if (process.platform === 'win32') {
-      tray.on('click', () => {
-        win.show();
-      });
-    }
-    const menu = Menu.buildFromTemplate([
-      {
-        label: 'Create Werk',
-        click: () => {
-          win.webContents.send('create-werk');
-          if (win.isMinimized()) {
-            win.restore();
-          }
-          win.focus();
-        },
-      },
-      {
-        label: 'Quit',
-        click: () => {
-          win.destroy();
-          app.isQuitting = true;
-          app.quit();
-        },
-      },
-    ]);
-    tray.setToolTip(TITLE);
-    tray.setContextMenu(menu);
+    top.tray = createTray(top.win);
   }
 });
 
+function createTray(win, werke = []) {
+  const tray = new Tray(FILE_TRAY_ICON);
+  if (process.platform === 'win32') {
+    tray.on('click', () => {
+      win.show();
+    });
+  }
+
+  const template = [];
+  werke.forEach((werk) => template.push({ label: werk.title, click: () => {
+    win.webContents.send('open-werk', werk);
+  }}));
+  if (werke.length > 0) {
+    template.push({ type: 'separator' });
+  }
+
+  const menu = Menu.buildFromTemplate(template.concat([
+    {
+      label: 'Create Werk',
+      click: () => {
+        win.webContents.send('create-werk');
+        if (win.isMinimized()) {
+          win.restore();
+        }
+        win.focus();
+      },
+    },
+    {
+      label: 'Quit',
+      click: () => {
+        win.destroy();
+        app.isQuitting = true;
+        app.quit();
+      },
+    },
+  ]));
+  tray.setToolTip(TITLE);
+  tray.setContextMenu(menu);
+  return tray;
+}
+
 app.on('before-quit', () => {
-  // release tray
-  tray = null;
+  // release top
+  top = null;
 });
 
 // process changes in settings
@@ -187,6 +204,11 @@ ipcMain.on('setting-changed', (event, { key, value }) => {
       openAtLogin: value,
     });
   }
+});
+
+ipcMain.on('latest-werke', (event, latestWerke) => {
+  top.tray.destroy();
+  top.tray = createTray(top.win, latestWerke);
 });
 
 // Exit cleanly on request from parent process in development mode.

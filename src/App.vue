@@ -114,6 +114,7 @@ export default {
       'gatheringWerke',
       'queue',
       'setting_dirs',
+      'latestWerke',
     ]),
   },
   data() {
@@ -123,6 +124,11 @@ export default {
       showSettings: false,
       GATHER_ALL_WERKE,
     };
+  },
+  watch: {
+    latestWerke(value) {
+      ipcRenderer.send('latest-werke', value);
+    },
   },
   methods: {
     createWerk() {
