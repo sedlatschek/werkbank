@@ -6,7 +6,9 @@
       fullscreen
       hide-overlay
       transition="dialog-bottom-transition">
-      <v-card v-if="tmp">
+      <v-card
+        v-if="tmp"
+        class="rounded-0">
         <v-toolbar
           dark
           color="primary">
