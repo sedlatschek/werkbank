@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.2.0]
+- use alternative appdata folder for development
+
 ## [v0.1.6]
 - fix application icon for windows
 - fix push notifications title
@@ -14,6 +17,7 @@
 ## [v0.1.0]
 - Happy birthday 🎂
 
+[v0.2.0]: https://github.com/sedlatschek/werkbank/releases/tag/v0.2.0
 [v0.1.6]: https://github.com/sedlatschek/werkbank/releases/tag/v0.1.6
 [v0.1.5]: https://github.com/sedlatschek/werkbank/releases/tag/v0.1.5
 [v0.1.4]: https://github.com/sedlatschek/werkbank/releases/tag/v0.1.4
