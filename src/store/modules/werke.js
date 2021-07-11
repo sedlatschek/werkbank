@@ -6,6 +6,7 @@ import {
   pathExists,
   readdir,
   readFile,
+  remove,
 } from 'fs-extra';
 import { join } from 'path';
 import { ipcRenderer } from 'electron';
@@ -17,7 +18,7 @@ import {
   WERK_ICON_NAME,
 } from '@/config';
 import {
-  ADD_ICON,
+  SET_ICON,
   BOOTSTRAP_WERKE,
   WERK_STATE_HOT,
   WERK_STATE_ARCHIVED,
@@ -38,7 +39,7 @@ import {
   PARSE_DIRS,
   SET_WERK_SEARCH,
 } from '@/store/types';
-import { hideDir, saveBase64 } from '@/util';
+import { hideDir, loadBase64, saveBase64 } from '@/util';
 
 class WerkFileMissingError extends Error {
   constructor(message) {
@@ -86,6 +87,10 @@ export default {
       const env = getters.envByHandle(werk.env);
       const baseDir = getters.setting_dir(desiredState);
       return join(baseDir, env.dir, werk.name);
+    },
+    iconFor: (state, getters) => (werk, werkState = null) => {
+      const dir = getters.dirFor(werk, werkState);
+      return join(dir, WERK_DIR_NAME, WERK_ICON_NAME);
     },
     werkSearch(state) {
       return state.werkSearch;
@@ -191,8 +196,8 @@ export default {
       // load icon file
       const iconFile = join(dir, WERK_DIR_NAME, WERK_ICON_NAME);
       if (await pathExists(iconFile)) {
-        const icon = `${PNG_MIME}${(await readFile(iconFile)).toString('base64')}`;
-        dispatch(ADD_ICON, { id: werk.id, icon });
+        const icon = await loadBase64(iconFile, PNG_MIME);
+        dispatch(SET_ICON, { id: werk.id, icon });
       }
 
       await dispatch(SET_WERK, werk);
@@ -242,9 +247,11 @@ export default {
       const werkFile = join(werkDir, WERK_FILE_NAME);
 
       const icon = getters.icon(werk.id);
+      const iconFile = join(werkDir, WERK_ICON_NAME);
       if (icon) {
-        const iconFile = join(werkDir, WERK_ICON_NAME);
         await saveBase64(iconFile, PNG_MIME, icon);
+      } else {
+        await remove(iconFile);
       }
 
       return outputJson(werkFile, werk);

@@ -12,6 +12,7 @@ export const SET_SETTING = 'SET_SETTING';
 export const BOOTSTRAP_ENVIRONMENTS = 'BOOTSTRAP_ENVIRONMENTS';
 export const SET_ENVIRONMENT = 'SET_ENVIRONMENT';
 export const REMOVE_ENVIRONMENT = 'REMOVE_ENVIRONMENT';
+export const GATHER_ENVIRONMENTS = 'GATHER_ENVIRONMENTS';
 
 // werke
 export const BOOTSTRAP_WERKE = 'BOOTSTRAP_WERKE';
@@ -39,7 +40,8 @@ export const PARSE_DIRS = 'PARSE_DIRS';
 export const SET_WERK_SEARCH = 'SET_WERK_SEARCH';
 
 // icons
-export const ADD_ICON = 'ADD_ICON';
+export const SET_ICON = 'SET_ICON';
+export const REMOVE_ICON = 'REMOVE_ICON';
 
 // operations
 export const OP_COPY_FILE = 'OP_COPY_FILE';

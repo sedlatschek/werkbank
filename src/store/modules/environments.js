@@ -1,5 +1,15 @@
+import { join } from 'path';
 import Vue from 'vue';
-import { BOOTSTRAP_ENVIRONMENTS, SET_ENVIRONMENT, REMOVE_ENVIRONMENT } from '@/store/types';
+import { DIR_ENV_ICONS, PNG_MIME } from '@/config';
+import {
+  BOOTSTRAP_ENVIRONMENTS,
+  SET_ENVIRONMENT,
+  REMOVE_ENVIRONMENT,
+  GATHER_ENVIRONMENTS,
+  SET_ICON,
+} from '@/store/types';
+import { pathExists } from 'fs-extra';
+import { loadBase64 } from '@/util';
 
 const defaults = [{
   handle: 'audio',
@@ -180,6 +190,7 @@ export default {
       return state.environments;
     },
     envByHandle: (state) => (handle) => state.environments.find((env) => env.handle === handle),
+    envIconFile: () => (handle) => `${join(DIR_ENV_ICONS, handle)}.png`,
   },
   mutations: {
     [SET_ENVIRONMENT](state, environment) {
@@ -198,11 +209,21 @@ export default {
     },
   },
   actions: {
-    [BOOTSTRAP_ENVIRONMENTS]({ commit, getters }) {
+    async [BOOTSTRAP_ENVIRONMENTS]({ commit, dispatch, getters }) {
       if (getters.environments.length === 0) {
         // only store defaults when environments are still empty
         defaults.forEach((env) => commit(SET_ENVIRONMENT, env));
       }
+      await dispatch(GATHER_ENVIRONMENTS);
+    },
+    async [GATHER_ENVIRONMENTS]({ dispatch, getters }) {
+      getters.environments.forEach(async (env) => {
+        const iconFile = getters.envIconFile(env.handle);
+        if (await pathExists(iconFile)) {
+          const icon = await loadBase64(iconFile, PNG_MIME);
+          await dispatch(SET_ICON, { id: env.handle, icon });
+        }
+      });
     },
     [SET_ENVIRONMENT]({ commit }, environment) {
       commit(SET_ENVIRONMENT, environment);

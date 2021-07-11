@@ -69,20 +69,9 @@
                       v-model="tmp.env"
                       @input="applyPreset"
                       required/>
-                    <v-img
-                      max-height="224"
-                      max-width="224"
-                      :src="icon"/>
-                    <v-file-input
-                      class="mt-2"
-                      clearable
-                      v-model="iconFile"
-                      :rules="iconRules"
-                      accept="image/png"
-                      placeholder="Pick an icon"
-                      prepend-icon="mdi-image"
+                    <image-select
                       label="Icon"
-                      @change="iconChange"/>
+                      v-model="icon"/>
                     <v-checkbox
                       v-model="tmp.compressOnArchive"
                       label="Compress werk into zip file on archive"/>
@@ -111,10 +100,9 @@
 </template>
 
 <script>
-import { readFileSync } from 'fs-extra';
-import { PNG_MIME } from '@/config';
 import {
-  ADD_ICON,
+  SET_ICON,
+  REMOVE_ICON,
   SET_WERK,
   SAVE_WERK,
   OPEN_WERK_FOLDER,
@@ -122,12 +110,14 @@ import {
 } from '@/store/types';
 import dateUtil from '@/mixins/dateUtil';
 import DateField from './DateField.vue';
+import ImageSelect from './ImageSelect.vue';
 import EnvironmentSelect from './EnvironmentSelect.vue';
 
 export default {
   mixins: [dateUtil],
   components: {
     DateField,
+    ImageSelect,
     EnvironmentSelect,
   },
   props: {
@@ -151,7 +141,6 @@ export default {
   data() {
     return {
       tmp: null,
-      iconFile: null,
       icon: null,
       valid: false,
       titleRules: [
@@ -176,20 +165,22 @@ export default {
   methods: {
     reset(value) {
       this.tmp = { ...value };
-      this.icon = this.$store.getters.icon(value.id);
-      this.iconFile = null;
+      if (value) {
+        this.icon = this.$store.getters.icon(value.id);
+      } else {
+        this.icon = null;
+      }
     },
     async save() {
       await this.$store.dispatch(SET_WERK, this.tmp);
       if (this.icon) {
-        await this.$store.dispatch(ADD_ICON, { id: this.tmp.id, icon: this.icon });
+        await this.$store.dispatch(SET_ICON, { id: this.tmp.id, icon: this.icon });
+      } else {
+        await this.$store.dispatch(REMOVE_ICON, this.tmp.id);
       }
       await this.$store.dispatch(SAVE_WERK, this.tmp);
       this.$store.dispatch(OPEN_WERK_FOLDER, this.tmp);
       this.$emit('input', false);
-    },
-    iconChange(file) {
-      this.icon = `${PNG_MIME}${readFileSync(file.path).toString('base64')}`;
     },
     applyPreset(handle) {
       const env = this.$store.getters.envByHandle(handle);

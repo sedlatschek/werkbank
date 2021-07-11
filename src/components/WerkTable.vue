@@ -21,6 +21,17 @@
           :src="$store.getters.icon(item.id)"/>
       </div>
     </template>
+    <template v-slot:item.env="{ item }">
+      <div class="d-flex align-center justify-start">
+        <v-img
+          class="mr-2"
+          aria-hidden
+          max-height="24"
+          max-width="24"
+          :src="$store.getters.icon(item.env)"/>
+        {{ $store.getters.envByHandle(item.env).name }}
+      </div>
+    </template>
     <template v-slot:item.status="{ item }">
       <v-chip
         v-if="item.moving"

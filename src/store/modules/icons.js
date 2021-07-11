@@ -1,5 +1,5 @@
-import { ADD_ICON } from '@/store/types';
 import Vue from 'vue';
+import { SET_ICON, REMOVE_ICON } from '@/store/types';
 
 export default {
   state: {
@@ -9,13 +9,19 @@ export default {
     icon: (state) => (idOrHandle) => state.icons[idOrHandle],
   },
   mutations: {
-    [ADD_ICON](state, { id, icon }) {
+    [SET_ICON](state, { id, icon }) {
       Vue.set(state.icons, id, icon);
+    },
+    [REMOVE_ICON](state, id) {
+      Vue.delete(state.icons, id);
     },
   },
   actions: {
-    [ADD_ICON]({ commit }, data) {
-      commit(ADD_ICON, data);
+    [SET_ICON]({ commit }, data) {
+      commit(SET_ICON, data);
+    },
+    [REMOVE_ICON]({ commit }, id) {
+      commit(REMOVE_ICON, id);
     },
   },
 };

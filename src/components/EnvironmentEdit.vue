@@ -52,6 +52,9 @@
                 label="Directory"
                 required
                 hint="The directory path gets preceded with the vault path."/>
+              <image-select
+                label="Icon"
+                v-model="icon"/>
               <tags
                 label="Ignored folders"
                 v-model="tmp.ignore"/>
@@ -67,11 +70,16 @@
 </template>
 
 <script>
-import { SET_ENVIRONMENT } from '@/store/types';
+import { pathExists, remove } from 'fs-extra';
+import { SET_ENVIRONMENT, SET_ICON, REMOVE_ICON } from '@/store/types';
+import { PNG_MIME } from '@/config';
+import { saveBase64 } from '@/util';
+import ImageSelect from './ImageSelect.vue';
 import Tags from './Tags.vue';
 
 export default {
   components: {
+    ImageSelect,
     Tags,
   },
   props: {
@@ -87,6 +95,7 @@ export default {
     return {
       valid: false,
       tmp: null,
+      icon: null,
       handleRules: [
         (v) => !!v || 'Handle is required',
         (v) => (v === this.environment.handle || !this.$store.getters.envByHandle(v)) || 'Handle must be unique',
@@ -102,17 +111,34 @@ export default {
   },
   watch: {
     environment(val) {
-      this.tmp = { ...val };
+      this.reset(val);
     },
   },
   methods: {
-    save() {
+    reset(value) {
+      this.tmp = { ...value };
+      if (value) {
+        this.icon = this.$store.getters.icon(value.handle);
+      } else {
+        this.icon = null;
+      }
+    },
+    async save() {
+      const iconFile = this.$store.getters.envIconFile(this.tmp.handle);
+      if (await pathExists(iconFile)) {
+        await this.$store.dispatch(REMOVE_ICON, this.tmp.handle);
+        await remove(iconFile);
+      }
+      if (this.icon) {
+        await this.$store.dispatch(SET_ICON, { id: this.tmp.handle, icon: this.icon });
+        await saveBase64(iconFile, PNG_MIME, this.icon);
+      }
       this.$store.dispatch(SET_ENVIRONMENT, this.tmp);
       this.$emit('input', false);
     },
   },
   created() {
-    this.tmp = { ...this.environment };
+    this.reset(this.environment);
   },
 };
 </script>

@@ -18,6 +18,15 @@
         </v-btn>
       </v-toolbar>
     </template>
+    <template v-slot:item.icon="{ item }">
+      <div class="d-flex align-center justify-center">
+        <v-img
+          aria-hidden
+          max-height="24"
+          max-width="24"
+          :src="$store.getters.icon(item.handle)"/>
+      </div>
+    </template>
     <template v-slot:item.ignore="{ item }">
       {{ item.ignore.join(', ') }}
     </template>

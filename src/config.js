@@ -5,7 +5,7 @@ export const DIR_APPDATA = process.env.NODE_ENV === 'production'
   ? join(getAppDataPath(), 'werkbank')
   : join('tmp', 'appdata');
 export const FILE_STATE = join(DIR_APPDATA, 'werkbank.json');
-export const DIR_ICONS = join(DIR_APPDATA, 'icons');
+export const DIR_ENV_ICONS = join(DIR_APPDATA, 'env_icons');
 export const FILE_TRAY_ICON = join(DIR_APPDATA, 'tray.png');
 
 export const WERK_DIR_NAME = '.werk';

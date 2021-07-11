@@ -1,5 +1,5 @@
+import { readFile, writeFile } from 'fs-extra';
 import { homedir, platform } from 'os';
-import { writeFile } from 'fs-extra';
 import { join } from 'path';
 import { set } from '@akryum/winattr';
 
@@ -33,6 +33,10 @@ export function hideDir(dir) {
       }
     });
   });
+}
+
+export async function loadBase64(file, mime) {
+  return `${mime}${(await readFile(file)).toString('base64')}`;
 }
 
 export async function saveBase64(file, mime, base64) {
