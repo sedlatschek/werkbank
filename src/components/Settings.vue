@@ -30,22 +30,25 @@
       <v-container class="mt-10">
         <v-form v-model="valid">
           <v-row>
+            <v-col
+              cols="12"
+              class="d-flex align-center"
+              v-for="(path, index) in paths"
+              :key="`path-${index}`">
+              <v-text-field
+                :rules="pathRules"
+                v-model="tmp[path.key]"
+                :label="path.label"
+                required/>
+              <v-btn
+                :title="`Select Path for ${path.label}`"
+                class="ml-5"
+                color="primary"
+                @click.stop="selectPath(path.key)">
+                Select
+              </v-btn>
+            </v-col>
             <v-col cols="12">
-              <v-text-field
-                :rules="pathRules"
-                v-model="tmp.dir_hot"
-                label="Hot Vault"
-                required/>
-              <v-text-field
-                :rules="pathRules"
-                v-model="tmp.dir_cold"
-                label="Cold Vault"
-                required/>
-              <v-text-field
-                :rules="pathRules"
-                v-model="tmp.dir_archive"
-                label="Archive Vault"
-                required/>
               <v-checkbox
                 v-model="tmp.launchWithSystem"
                 label="Launch Werkbank on system startup"/>
@@ -67,6 +70,7 @@
 import { mapGetters } from 'vuex';
 import { existsSync } from 'fs';
 import { SET_SETTING } from '@/store/types';
+import { showOpenDialog } from '@/dialog';
 
 export default {
   props: {
@@ -84,6 +88,16 @@ export default {
     return {
       valid: false,
       tmp: null,
+      paths: [{
+        key: 'dir_hot',
+        label: 'Hot Vault',
+      }, {
+        key: 'dir_cold',
+        label: 'Cold Vault',
+      }, {
+        key: 'dir_archive',
+        label: 'Archive Vault',
+      }],
       pathRules: [
         (v) => (!!v && existsSync(v)) || 'Path must exist',
       ],
@@ -96,6 +110,15 @@ export default {
         this.$store.dispatch(SET_SETTING, { key, value: this.tmp[key] });
       });
       this.$emit('input', false);
+    },
+    async selectPath(key) {
+      const result = await showOpenDialog({
+        properties: ['openDirectory'],
+      });
+      if (!result.cancelled) {
+        const path = result.filePaths[0];
+        this.tmp[key] = path;
+      }
     },
   },
   created() {

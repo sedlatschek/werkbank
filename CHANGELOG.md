@@ -4,6 +4,7 @@
 - use alternative appdata folder for development
 - add environment icons
 - add environment import/export
+- add select dialog for settings paths
 
 ## [v0.1.6]
 - fix application icon for windows
