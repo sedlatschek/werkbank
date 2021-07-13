@@ -3,6 +3,7 @@
 ## [v0.2.0]
 - use alternative appdata folder for development
 - add environment icons
+- add environment import/export
 
 ## [v0.1.6]
 - fix application icon for windows

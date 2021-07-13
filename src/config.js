@@ -1,6 +1,7 @@
 import { join } from 'path';
 import { getAppDataPath } from '@/util';
 
+export const APP_TITLE = 'Werkbank';
 export const DIR_APPDATA = process.env.NODE_ENV === 'production'
   ? join(getAppDataPath(), 'werkbank')
   : join('tmp', 'appdata');

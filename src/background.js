@@ -1,5 +1,6 @@
 import {
   app,
+  dialog,
   ipcMain,
   protocol,
   BrowserWindow,
@@ -210,6 +211,22 @@ ipcMain.on('latest-werke', (event, latestWerke) => {
   top.tray.destroy();
   top.tray = createTray(top.win, latestWerke);
 });
+
+['showOpenDialog', 'showSaveDialog', 'showMessageBox'].forEach((d) => {
+  ipcMain.on(d, async (event, { index, options }) => {
+    const window = BrowserWindow.fromWebContents(event.sender)
+    const result = await dialog[d](window, options);
+    window.send(`${d}Result`, { index, result});
+  });
+});
+
+['showErrorBox'].forEach((d) => {
+  ipcMain.on(d, async (event, { index, title, content }) => {
+    const window = BrowserWindow.fromWebContents(event.sender)
+    const result = await dialog[d](title, content);
+    window.send(`${d}Result`, { index, result});
+  });
+})
 
 // Exit cleanly on request from parent process in development mode.
 if (IS_DEVELOPMENT) {

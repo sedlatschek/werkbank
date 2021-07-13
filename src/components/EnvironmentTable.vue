@@ -10,9 +10,25 @@
           icon="iframe-outline"/>
         <v-spacer/>
         <v-btn
+          title="Import Environments"
+          :disabled="disabled"
+          class="mb-2 mx-1"
+          @click.stop="$emit('import-envs')">
+          Import
+        </v-btn>
+        <v-btn
+          title="Export Environments"
+          :disabled="disabled"
+          class="mb-2 mx-1"
+          @click.stop="$emit('export-envs')">
+          Export
+        </v-btn>
+        <v-btn
+          title="Create New Environment"
+          :disabled="disabled"
           color="primary"
           dark
-          class="mb-2"
+          class="mb-2 ml-1"
           @click.stop="$emit('create')">
           New Environment
         </v-btn>
@@ -38,6 +54,7 @@
     </template>
     <template v-slot:item.actions="{ item }">
       <v-icon
+        :disabled="disabled"
         title="Edit Environment"
         small
         class="ml-2"
@@ -45,6 +62,7 @@
         mdi-pencil
       </v-icon>
       <v-icon
+        :disabled="disabled"
         title="Delete Environment"
         small
         class="ml-2"
@@ -56,10 +74,17 @@
 </template>
 
 <script>
+
 import { mapGetters } from 'vuex';
 import TableTitle from './TableTitle.vue';
 
 export default {
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
   components: {
     TableTitle,
   },
