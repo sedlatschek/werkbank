@@ -50,6 +50,9 @@
             </v-col>
             <v-col cols="12">
               <v-checkbox
+                v-model="tmp.dark"
+                label="Dark Mode"/>
+              <v-checkbox
                 v-model="tmp.launchWithSystem"
                 label="Launch Werkbank on system startup"/>
               <v-checkbox
@@ -108,6 +111,9 @@ export default {
       const keys = Object.keys(this.tmp);
       keys.forEach((key) => {
         this.$store.dispatch(SET_SETTING, { key, value: this.tmp[key] });
+        if (key === 'dark') {
+          this.$vuetify.theme.dark = this.tmp[key];
+        }
       });
       this.$emit('input', false);
     },

@@ -5,6 +5,7 @@
 - add environment icons
 - add environment import/export
 - add select dialog for settings paths
+- add dark theme
 
 ## [v0.1.6]
 - fix application icon for windows

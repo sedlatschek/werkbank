@@ -4,7 +4,7 @@
       class="flex"
       flat
       tile>
-      <v-card-text class="py-1 black--text font-weight-light d-flex justify-space-between">
+      <v-card-text class="py-1 dark--text font-weight-light d-flex justify-space-between">
         <span>Made with ❤️ by Simon Sedlatschek</span>
         <div>
           <a class="mx-2" @click.stop="open('Changelog')">Changelog</a>

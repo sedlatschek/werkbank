@@ -16,6 +16,7 @@ export default {
       gatherOnStartup: true,
       launchWithSystem: false,
       launchMinimized: false,
+      dark: false,
     },
   },
   getters: {
@@ -39,6 +40,7 @@ export default {
       ];
     },
     setting_dir: (state, getters) => (werkState) => getters.setting_dirs[werkState],
+    setting_dark: (state) => state.settings.dark,
   },
   mutations: {
     [SET_SETTING](state, { key, value }) {
